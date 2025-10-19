@@ -420,10 +420,7 @@ export default function NewsEventsPage() {
                     </div>
                   </div>
 
-                  <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2">
-                    <span>Register Now</span>
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
+                 
                 </div>
               </div>
             ))}

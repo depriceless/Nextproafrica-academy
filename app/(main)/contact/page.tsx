@@ -1,7 +1,14 @@
 "use client"
 
 import { useState } from 'react'
-import { MapPin, Phone, Mail, Clock, ChevronRight, Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, ChevronRight, Send, CheckCircle, AlertCircle, Facebook, Twitter, Instagram, Youtube, MessageCircle } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -12,62 +19,65 @@ export default function ContactPage() {
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: 'success' | 'error' | null
-    message: string
-  }>({ type: null, message: '' })
+  const [submitStatus, setSubmitStatus] = useState({ type: null, message: '' })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+        throw new Error('Please fill in all required fields')
+      }
+
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null,
+            subject: formData.subject,
+            message: formData.message,
+            user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+          }
+        ])
+
+      if (error) {
+        throw error
+      }
+
+      setSubmitStatus({
+        type: 'success',
+        message: 'Thank you for contacting us! We will get back to you soon.'
+      })
+      
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
       })
 
-      const data = await response.json()
+      setTimeout(() => {
+        setSubmitStatus({ type: null, message: '' })
+      }, 5000)
 
-      if (response.ok) {
-        setSubmitStatus({
-          type: 'success',
-          message: data.message || 'Thank you for contacting us! We will get back to you soon.'
-        })
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: ''
-        })
-        
-        // Auto-hide success message after 5 seconds
-        setTimeout(() => {
-          setSubmitStatus({ type: null, message: '' })
-        }, 5000)
-      } else {
-        setSubmitStatus({
-          type: 'error',
-          message: data.error || 'Failed to send message. Please try again.'
-        })
-      }
     } catch (error) {
+      console.error('Error submitting form:', error)
       setSubmitStatus({
         type: 'error',
-        message: 'An error occurred. Please try again later.'
+        message: error.message || 'Failed to send message. Please try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -95,24 +105,63 @@ export default function ContactPage() {
     },
     {
       icon: Clock,
-      title: "Working Hours",
-      details: ["Mon - Fri: 8:00 AM - 6:00 PM", "Sat - Sun: 9:00 AM - 4:00 PM"],
+      title: "Training Schedule",
+      details: ["Mon, Wed, Fri: 10:00 AM - 12:00 PM", "Saturday: 10:00 AM - 11:00 AM (Gym Session)"],
       color: "red"
     }
   ]
 
-  const getColorClasses = (color: string) => {
-    const colors: Record<string, any> = {
-      yellow: { bg: "bg-yellow-500/10", text: "text-yellow-600", icon: "text-yellow-600" },
-      blue: { bg: "bg-blue-500/10", text: "text-blue-600", icon: "text-blue-600" },
-      green: { bg: "bg-green-500/10", text: "text-green-600", icon: "text-green-600" },
-      red: { bg: "bg-red-500/10", text: "text-red-600", icon: "text-red-600" }
+  const socialMedia = [
+    {
+      name: "Facebook",
+      icon: Facebook,
+      url: "https://shrtlink.ai/NPA",
+      color: "bg-blue-600 hover:bg-blue-700"
+    },
+    {
+      name: "Instagram",
+      icon: Instagram,
+      url: "https://clik.now/sHt6",
+      color: "bg-pink-600 hover:bg-pink-700"
+    },
+    {
+      name: "Twitter",
+      icon: Twitter,
+      url: "https://clik.now/TVX2",
+      color: "bg-sky-500 hover:bg-sky-600"
+    },
+    {
+      name: "YouTube",
+      icon: Youtube,
+      url: "https://clik.now/PSei",
+      color: "bg-red-600 hover:bg-red-700"
+    },
+    {
+      name: "TikTok",
+      icon: MessageCircle,
+      url: "https://clik.now/4pFL",
+      color: "bg-gray-900 hover:bg-black"
+    },
+    {
+      name: "WhatsApp",
+      icon: MessageCircle,
+      url: "https://wa.me/234803456789",
+      color: "bg-green-600 hover:bg-green-700"
+    }
+  ]
+
+  const getColorClasses = (color) => {
+    const colors = {
+      yellow: { bg: "bg-yellow-500/10", icon: "text-yellow-600" },
+      blue: { bg: "bg-blue-500/10", icon: "text-blue-600" },
+      green: { bg: "bg-green-500/10", icon: "text-green-600" },
+      red: { bg: "bg-red-500/10", icon: "text-red-600" }
     }
     return colors[color]
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-30 pb-16">
+    <div className="min-h-screen bg-slate-50 pb-16">
       {/* Hero Section */}
       <section className="relative bg-slate-900 py-16 lg:py-20 overflow-hidden mb-16">
         <div className="absolute inset-0">
@@ -140,7 +189,7 @@ export default function ContactPage() {
           </h1>
           
           <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Have questions? We'd love to hear from you. Contact us via any of our channels.
           </p>
         </div>
       </section>
@@ -157,7 +206,7 @@ export default function ContactPage() {
 
             {/* Status Messages */}
             {submitStatus.type && (
-              <div className={`mb-6 p-4 rounded-lg flex items-start space-x-3 animate-in fade-in slide-in-from-top-2 ${
+              <div className={`mb-6 p-4 rounded-lg flex items-start space-x-3 ${
                 submitStatus.type === 'success' 
                   ? 'bg-green-50 border border-green-200' 
                   : 'bg-red-50 border border-red-200'
@@ -183,7 +232,7 @@ export default function ContactPage() {
               </div>
             )}
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -194,7 +243,6 @@ export default function ContactPage() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                     disabled={isSubmitting}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="John Doe"
@@ -210,7 +258,6 @@ export default function ContactPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
                     disabled={isSubmitting}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="john@example.com"
@@ -242,7 +289,6 @@ export default function ContactPage() {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    required
                     disabled={isSubmitting}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -264,7 +310,6 @@ export default function ContactPage() {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  required
                   disabled={isSubmitting}
                   rows={6}
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed"
@@ -273,7 +318,7 @@ export default function ContactPage() {
               </div>
 
               <button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={isSubmitting}
                 className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2"
               >
@@ -293,7 +338,7 @@ export default function ContactPage() {
               <p className="text-sm text-gray-500 text-center">
                 We'll respond within 24 hours during business days
               </p>
-            </form>
+            </div>
           </div>
 
           {/* Map and Contact Info */}
@@ -315,13 +360,14 @@ export default function ContactPage() {
             <div className="grid md:grid-cols-2 gap-6">
               {contactInfo.map((info, index) => {
                 const colors = getColorClasses(info.color)
+                const Icon = info.icon
                 return (
                   <div
                     key={index}
                     className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
                     <div className={`w-12 h-12 ${colors.bg} rounded-xl flex items-center justify-center mb-4`}>
-                      <info.icon className={`h-6 w-6 ${colors.icon}`} />
+                      <Icon className={`h-6 w-6 ${colors.icon}`} />
                     </div>
                     <h4 className="text-lg font-bold text-slate-900 mb-2">{info.title}</h4>
                     {info.details.map((detail, idx) => (
@@ -336,8 +382,43 @@ export default function ContactPage() {
           </div>
         </div>
 
+        {/* Social Media Section */}
+        <section className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-8 lg:p-12 shadow-xl border border-yellow-500/10 mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              Follow Us On Social Media
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Stay updated with the latest news, events, and updates from Nextpro Africa FA
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            {socialMedia.map((platform, index) => {
+              const Icon = platform.icon
+              return (
+                <a
+                  key={index}
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${platform.color} text-white p-3 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg`}
+                >
+                  <Icon className="h-6 w-6" />
+                </a>
+              )
+            })}
+          </div>
+
+          <div className="mt-8 pt-8 border-t border-gray-700 text-center">
+            <p className="text-gray-400 text-sm">
+              Connect with us on any platform for instant updates, behind-the-scenes content, and community engagement
+            </p>
+          </div>
+        </section>
+
         {/* FAQ Section */}
-        <section className="bg-white rounded-2xl p-8 lg:p-12 shadow-xl border border-gray-100">
+        <section className="bg-white rounded-2xl p-8 lg:p-12 shadow-xl border border-gray-100 mb-16">
           <div className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4">
               Frequently Asked Questions
@@ -355,11 +436,11 @@ export default function ContactPage() {
               },
               {
                 question: "How do I register my child?",
-                answer: "You can register by filling out the contact form above, calling us, or visiting our facility for a trial session."
+                answer: "You can register by filling out the contact form above, calling us, visiting us on WhatsApp, or visiting our facility for a trial session."
               },
               {
                 question: "What are the training schedules?",
-                answer: "Training sessions run Monday-Friday 4-6 PM and Saturdays 9-11 AM, with flexible options available."
+                answer: "Training sessions run Monday, Wednesday, and Friday from 10:00 AM - 12:00 PM. We also have a Gym Session on Saturdays from 10:00 AM - 11:00 AM."
               },
               {
                 question: "Do you provide equipment?",

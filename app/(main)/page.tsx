@@ -1,14 +1,27 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Trophy, MapPin, Phone, Mail, Clock, CheckCircle, AlertCircle } from 'lucide-react'
-import Link from 'next/link'
+import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Trophy, MapPin, Phone, Mail, Clock, CircleCheck, AlertCircle } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase lazily
+let supabaseClient = null
+const getSupabase = () => {
+  if (!supabaseClient) {
+    supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    )
+  }
+  return supabaseClient
+}
+
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [counts, setCounts] = useState({ players: 0, coaches: 0, years: 0, success: 0 })
   const [activeCategory, setActiveCategory] = useState('all')
-  const [selectedImage, setSelectedImage] = useState<number | null>(null)
+  const [selectedImage, setSelectedImage] = useState(null)
   const [storyVisible, setStoryVisible] = useState(false)
   const [programsVisible, setProgramsVisible] = useState(false)
   const [contactVisible, setContactVisible] = useState(false)
@@ -22,29 +35,26 @@ export default function HomePage() {
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: 'success' | 'error' | null
-    message: string
-  }>({ type: null, message: '' })
+  const [submitStatus, setSubmitStatus] = useState({ type: null, message: '' })
 
   const slides = [
     {
       title: "Transform Your Game",
       subtitle: "Elite Football Training",
       description: "Join Nigeria's premier football academy and unlock your full potential with world-class coaching",
-      image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1920&q=80"
+      image: "/hero.jpg"
     },
     {
       title: "Champions Are Made Here",
       subtitle: "Professional Development",
       description: "From grassroots to glory - comprehensive training programs for every skill level",
-      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1920&q=80"
+      image: "/nextpro.jpg"
     },
     {
       title: "Your Journey Starts Now",
       subtitle: "Excellence in Every Touch",
       description: "State-of-the-art facilities and UEFA-certified coaches ready to elevate your game",
-      image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1920&q=80"
+      image: "/nextproi.jpg"
     }
   ]
 
@@ -92,12 +102,12 @@ export default function HomePage() {
   ]
 
   const galleryItems = [
-    { id: 1, type: 'image', url: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80', category: 'training', title: 'Skill Development Session', description: 'Players practicing ball control drills' },
-    { id: 2, type: 'image', url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80', category: 'matches', title: 'Championship Final', description: 'Our U-17 team in action' },
-    { id: 3, type: 'image', url: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80', category: 'training', title: 'Team Training', description: 'Tactical training session' },
+    { id: 1, url: '/match.jpg', category: 'training', objectPosition: 'top', type: 'image' },
+    { id: 2, url: '/matchii.jpg', category: 'matches', objectPosition: 'top', type: 'image' },
+    { id: 3, url: '/matchiii.jpg', category: 'events', objectPosition: 'top', type: 'image' },
     { id: 4, type: 'video', thumbnail: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800&q=80', category: 'events', title: 'Academy Graduation 2024', description: 'Celebrating our graduates' },
-    { id: 5, type: 'image', url: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800&q=80', category: 'facilities', title: 'Training Ground', description: 'State-of-the-art facilities' },
-    { id: 6, type: 'image', url: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80', category: 'matches', title: 'Victory Celebration', description: 'Team celebrating tournament win' }
+    { id: 5, type: 'image', url: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800&q=80', category: 'facilities', title: 'Training Ground', description: 'State-of-the-art facilities', objectPosition: 'top' },
+    { id: 6, type: 'image', url: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80', category: 'matches', title: 'Victory Celebration', description: 'Team celebrating tournament win', objectPosition: 'top' },
   ]
 
   const newsArticles = [
@@ -110,14 +120,16 @@ export default function HomePage() {
     { icon: MapPin, title: "Visit Us", details: ["123 Sports Avenue, Ring Road", "Ibadan, Oyo State, Nigeria"], color: "yellow" },
     { icon: Phone, title: "Call Us", details: ["+234 803 456 7890"], color: "blue" },
     { icon: Mail, title: "Email Us", details: ["Nextproafrica2025@gmail.com"], color: "green" },
-    { icon: Clock, title: "Working Hours", details: ["Mon - Fri: 8:00 AM - 6:00 PM"], color: "red" }
+    { icon: Clock, title: "Training Schedule", details: ["Mon, Wed, Fri: 10:00 AM - 12:00 PM", "Saturday: 10:00 AM - 11:00 AM (Gym)"], color: "red" }
   ]
 
+  // Auto-slide hero
   useEffect(() => {
     const timer = setInterval(() => setCurrentSlide((prev) => (prev + 1) % slides.length), 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [slides.length])
 
+  // Counter animation
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -126,7 +138,12 @@ export default function HomePage() {
         const timer = setInterval(() => {
           step++
           const progress = step / steps
-          setCounts({ players: Math.floor(500 * progress), coaches: Math.floor(15 * progress), years: Math.floor(10 * progress), success: Math.floor(98 * progress) })
+          setCounts({ 
+            players: Math.floor(500 * progress), 
+            coaches: Math.floor(15 * progress), 
+            years: Math.floor(10 * progress), 
+            success: Math.floor(98 * progress) 
+          })
           if (step >= steps) {
             clearInterval(timer)
             setCounts({ players: 500, coaches: 15, years: 10, success: 98 })
@@ -139,45 +156,34 @@ export default function HomePage() {
     return () => { if (section) observer.unobserve(section) }
   }, [])
 
+  // Intersection observers for animations
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setStoryVisible(entry.isIntersecting), { threshold: 0.2 })
-    const section = document.getElementById('story-section')
-    if (section) observer.observe(section)
-    return () => { if (section) observer.unobserve(section) }
-  }, [])
+    const createObserver = (id, setState) => {
+      const observer = new IntersectionObserver(([entry]) => setState(entry.isIntersecting), { threshold: 0.1 })
+      const section = document.getElementById(id)
+      if (section) observer.observe(section)
+      return () => { if (section) observer.unobserve(section) }
+    }
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setValuesVisible(entry.isIntersecting), { threshold: 0.1 })
-    const section = document.getElementById('values-section')
-    if (section) observer.observe(section)
-    return () => { if (section) observer.unobserve(section) }
-  }, [])
+    const cleanup1 = createObserver('story-section', setStoryVisible)
+    const cleanup2 = createObserver('values-section', setValuesVisible)
+    const cleanup3 = createObserver('programmes', setProgramsVisible)
+    const cleanup4 = createObserver('news', setNewsVisible)
+    const cleanup5 = createObserver('contact', setContactVisible)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setProgramsVisible(entry.isIntersecting), { threshold: 0.1 })
-    const section = document.getElementById('programmes')
-    if (section) observer.observe(section)
-    return () => { if (section) observer.unobserve(section) }
-  }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setNewsVisible(entry.isIntersecting), { threshold: 0.1 })
-    const section = document.getElementById('news')
-    if (section) observer.observe(section)
-    return () => { if (section) observer.unobserve(section) }
-  }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setContactVisible(entry.isIntersecting), { threshold: 0.1 })
-    const section = document.getElementById('contact')
-    if (section) observer.observe(section)
-    return () => { if (section) observer.unobserve(section) }
+    return () => {
+      cleanup1()
+      cleanup2()
+      cleanup3()
+      cleanup4()
+      cleanup5()
+    }
   }, [])
 
   const filteredItems = activeCategory === 'all' ? galleryItems : galleryItems.filter(item => item.category === activeCategory)
 
-  const getColorClasses = (color: string) => {
-    const colors: Record<string, any> = {
+  const getColorClasses = (color) => {
+    const colors = {
       blue: { gradient: "from-blue-500 to-blue-600", light: "bg-blue-500/10", text: "text-blue-600", border: "border-blue-500/20", hover: "hover:border-blue-500" },
       yellow: { gradient: "from-yellow-500 to-yellow-600", light: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500/20", hover: "hover:border-yellow-500", bg: "bg-yellow-500/10", icon: "text-yellow-600" },
       green: { gradient: "from-green-500 to-green-600", light: "bg-green-500/10", text: "text-green-600", border: "border-green-500/20", hover: "hover:border-green-500", bg: "bg-green-500/10", icon: "text-green-600" },
@@ -186,38 +192,57 @@ export default function HomePage() {
     return colors[color]
   }
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = { "Achievement": "bg-yellow-500", "Announcement": "bg-blue-500", "Event": "bg-green-500" }
+  const getCategoryColor = (category) => {
+    const colors = { "Achievement": "bg-yellow-500", "Announcement": "bg-blue-500", "Event": "bg-green-500" }
     return colors[category] || "bg-gray-500"
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setSubmitStatus({ type: 'success', message: data.message || 'Thank you for contacting us! We will get back to you soon.' })
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
-        setTimeout(() => setSubmitStatus({ type: null, message: '' }), 5000)
-      } else {
-        setSubmitStatus({ type: 'error', message: data.error || 'Failed to send message. Please try again.' })
+      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+        throw new Error('Please fill in all required fields')
       }
+
+      const supabase = getSupabase()
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null,
+            subject: formData.subject,
+            message: formData.message,
+            user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+          }
+        ])
+
+      if (error) throw error
+
+      setSubmitStatus({
+        type: 'success',
+        message: 'Thank you for contacting us! We will get back to you soon.'
+      })
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+      
+      setTimeout(() => {
+        setSubmitStatus({ type: null, message: '' })
+      }, 5000)
+
     } catch (error) {
-      setSubmitStatus({ type: 'error', message: 'An error occurred. Please try again later.' })
+      console.error('Error submitting form:', error)
+      setSubmitStatus({
+        type: 'error',
+        message: error.message || 'Failed to send message. Please try again.'
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -226,12 +251,12 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen bg-slate-900 overflow-hidden">
+      <section id="home" className="relative min-h-screen bg-slate-900 overflow-hidden pt-20">
         <div className="absolute inset-0">
           {slides.map((slide, index) => (
             <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
-              <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/40" />
+              <img src={slide.image} alt={slide.title} className="w-full h-full object-cover object-center" loading={index === 0 ? "eager" : "lazy"} />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/30" />
             </div>
           ))}
         </div>
@@ -256,13 +281,10 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto text-center">{slides[currentSlide].description}</p>
 
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link 
-  href="/auth"
-  className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2"
->
-  <span>Join Academy</span>
-  <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-</Link>
+                <button className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
+                  <span>Join Academy</span>
+                  <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </button>
                 <button onClick={() => setIsVideoPlaying(true)} className="group relative bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center space-x-2">
                   <Play className="h-5 w-5" />
                   <span>Watch Video</span>
@@ -317,7 +339,7 @@ export default function HomePage() {
           <div id="story-section" className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
             <div className={`relative transition-all duration-1000 ${storyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'}`}>
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80" alt="Football Training" className="w-full h-[500px] object-cover" />
+                <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80" alt="Football Training" className="w-full h-[500px] object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
                 
                 <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-xl">
@@ -340,8 +362,8 @@ export default function HomePage() {
             <div className={`space-y-8 transition-all duration-1000 delay-300 ${storyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}>
               <div>
                 <h3 className="text-3xl font-bold text-slate-900 mb-4">Our Story</h3>
-                <p className="text-gray-600 leading-relaxed mb-4">Founded in 2015, Nextpro Africa FA began with a simple vision: to create a world-class football training environment where Nigerian talent could flourish and compete on the global stage.</p>
-                <p className="text-gray-600 leading-relaxed">Today, we're proud to have developed hundreds of players who have gone on to represent clubs across Nigeria and internationally. Our commitment to excellence, combined with state-of-the-art facilities and UEFA-certified coaching staff, makes us the premier choice for serious young footballers.</p>
+                <p className="text-gray-600 leading-relaxed mb-4">Nextpro Africa is more than a football academy — we are a community and a pathway. Founded to give talented African children structured access to professional coaching, education and exposure,</p>
+                <p className="text-gray-600 leading-relaxed">Nextpro Africa helps promising players reach competitive leagues while equipping them with the life skills to thrive beyond football.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-6">
@@ -362,10 +384,10 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <a href="/about" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+              <button className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
                 <span>Learn More About Us</span>
                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -378,6 +400,7 @@ export default function HomePage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((value, index) => {
                 const delay = index * 150
+                const Icon = value.icon
                 return (
                   <div 
                     key={index} 
@@ -385,7 +408,7 @@ export default function HomePage() {
                     style={{ transitionDelay: `${delay}ms` }}
                   >
                     <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all">
-                      <value.icon className="h-8 w-8 text-white" />
+                      <Icon className="h-8 w-8 text-white" />
                     </div>
                     <h4 className="text-xl font-bold text-slate-900 mb-3">{value.title}</h4>
                     <p className="text-gray-600 leading-relaxed">{value.description}</p>
@@ -418,6 +441,7 @@ export default function HomePage() {
             {programs.map((program, index) => {
               const colors = getColorClasses(program.color)
               const delay = index * 200
+              const Icon = program.icon
               
               return (
                 <div key={index} className={`relative bg-white rounded-2xl p-8 border-2 transition-all duration-1000 ${colors.border} ${colors.hover} hover:shadow-2xl hover:-translate-y-2 ${program.featured ? 'shadow-2xl scale-105 ring-2 ring-yellow-500/20' : 'shadow-lg'} ${programsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${delay}ms` }}>
@@ -428,7 +452,7 @@ export default function HomePage() {
                   )}
 
                   <div className={`w-16 h-16 bg-gradient-to-br ${colors.gradient} rounded-2xl flex items-center justify-center mb-6 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
-                    <program.icon className="h-8 w-8 text-white" />
+                    <Icon className="h-8 w-8 text-white" />
                   </div>
 
                   <div className="mb-6">
@@ -498,8 +522,13 @@ export default function HomePage() {
             {filteredItems.map((item) => (
               <div key={item.id} className="group relative bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer" onClick={() => setSelectedImage(item.id)}>
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <img src={item.type === 'video' ? item.thumbnail : item.url} alt={item.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                  <img 
+                    src={item.type === 'video' ? item.thumbnail : item.url} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    style={{ objectPosition: item.objectPosition || 'center' }}
+                    loading="lazy"
+                  />
                   
                   {item.type === 'video' && (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -523,10 +552,10 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <a href="/gallery" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+            <button className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
               <span>View Full Gallery</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </a>
+            </button>
           </div>
         </div>
 
@@ -575,7 +604,7 @@ export default function HomePage() {
               return (
                 <div key={article.id} className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer ${newsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${delay}ms` }}>
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <img src={article.image} alt={article.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
+                    <img src={article.image} alt={article.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
                     <div className={`absolute top-4 left-4 ${getCategoryColor(article.category)} text-white px-3 py-1 rounded-full text-xs font-bold`}>{article.category}</div>
                   </div>
@@ -604,10 +633,10 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <a href="/news" className="group inline-flex bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+            <button className="group inline-flex bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
               <span>View All News</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -638,7 +667,7 @@ export default function HomePage() {
 
               {submitStatus.type && (
                 <div className={`mb-6 p-4 rounded-lg flex items-start space-x-3 ${submitStatus.type === 'success' ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
-                  {submitStatus.type === 'success' ? <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" /> : <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />}
+                  {submitStatus.type === 'success' ? <CircleCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" /> : <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />}
                   <div className="flex-1">
                     <p className={`text-sm font-medium ${submitStatus.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>{submitStatus.message}</p>
                   </div>
@@ -646,16 +675,16 @@ export default function HomePage() {
                 </div>
               )}
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-300 mb-2">Your Name <span className="text-red-400">*</span></label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} required disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="John Doe" />
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="John Doe" />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-semibold text-gray-300 mb-2">Email Address <span className="text-red-400">*</span></label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="john@example.com" />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="john@example.com" />
                   </div>
                 </div>
 
@@ -667,7 +696,7 @@ export default function HomePage() {
                   
                   <div>
                     <label className="block text-sm font-semibold text-gray-300 mb-2">Subject <span className="text-red-400">*</span></label>
-                    <select name="subject" value={formData.subject} onChange={handleChange} required disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <select name="subject" value={formData.subject} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                       <option value="">Select a subject</option>
                       <option value="Enrollment Inquiry">Enrollment Inquiry</option>
                       <option value="Program Information">Program Information</option>
@@ -680,10 +709,10 @@ export default function HomePage() {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-300 mb-2">Message <span className="text-red-400">*</span></label>
-                  <textarea name="message" value={formData.message} onChange={handleChange} required disabled={isSubmitting} rows={6} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed" placeholder="Tell us more about your inquiry..." />
+                  <textarea name="message" value={formData.message} onChange={handleChange} disabled={isSubmitting} rows={6} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed" placeholder="Tell us more about your inquiry..." />
                 </div>
 
-                <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2">
+                <button onClick={handleSubmit} disabled={isSubmitting} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2">
                   {isSubmitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
@@ -698,7 +727,7 @@ export default function HomePage() {
                 </button>
 
                 <p className="text-sm text-gray-400 text-center">We'll respond within 24 hours during business days</p>
-              </form>
+              </div>
             </div>
 
             <div className={`space-y-6 transition-all duration-1000 delay-300 ${contactVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}>
@@ -710,10 +739,11 @@ export default function HomePage() {
                 {contactInfo.map((info, index) => {
                   const colors = getColorClasses(info.color)
                   const delay = (index + 1) * 200
+                  const Icon = info.icon
                   return (
                     <div key={index} className={`bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-700 hover:border-yellow-500/30 hover:scale-105 transition-all duration-500 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${delay}ms` }}>
                       <div className={`w-12 h-12 ${colors.bg} rounded-xl flex items-center justify-center mb-4`}>
-                        <info.icon className={`h-6 w-6 ${colors.icon}`} />
+                        <Icon className={`h-6 w-6 ${colors.icon}`} />
                       </div>
                       <h4 className="text-lg font-bold text-white mb-2">{info.title}</h4>
                       {info.details.map((detail, idx) => (
@@ -726,7 +756,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> 
     </div>
   )
 }

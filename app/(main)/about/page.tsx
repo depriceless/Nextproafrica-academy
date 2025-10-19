@@ -188,7 +188,7 @@ export default function AboutUsPage() {
     }
   ]
 
-  const getColorClasses = (color) => {
+ const getColorClasses = (color: string) => {
     const colors = {
       yellow: { bg: "bg-yellow-500", light: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500", gradient: "from-yellow-500 to-yellow-600" },
       red: { bg: "bg-red-500", light: "bg-red-500/10", text: "text-red-600", border: "border-red-500", gradient: "from-red-500 to-red-600" },
@@ -240,9 +240,6 @@ export default function AboutUsPage() {
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
-                <button className="group bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-lg font-bold transition-all duration-300 border border-white/20 hover:border-white/40">
-                  <span>Download Brochure</span>
-                </button>
               </div>
             </div>
 
@@ -681,15 +678,7 @@ export default function AboutUsPage() {
             </button>
           </div>
 
-          <div className="mt-16 pt-12 border-t border-white/10">
-            <p className="text-gray-400 text-sm mb-6 uppercase tracking-wider font-semibold">Trusted By Leading Organizations</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 opacity-50">
-              <div className="text-white font-bold text-xl">NFF</div>
-              <div className="text-white font-bold text-xl">CAF</div>
-              <div className="text-white font-bold text-xl">UEFA</div>
-              <div className="text-white font-bold text-xl">FIFA</div>
-            </div>
-          </div>
+          
         </div>
       </section>
     </div>
