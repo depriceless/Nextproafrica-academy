@@ -3,6 +3,23 @@
 import { useState, useEffect } from 'react'
 import { Trophy, Award, Target, Users, Heart, Shield, Zap, Star, ChevronRight, Medal, TrendingUp, Globe, ArrowRight, CheckCircle, Linkedin, Mail, BookOpen, Briefcase, Map } from 'lucide-react'
 
+// Add type definitions at the top level
+type ColorType = 'yellow' | 'red' | 'blue' | 'purple' | 'green' | 'orange'
+
+interface ValueItem {
+  icon: any
+  title: string
+  description: string
+  color: ColorType
+}
+
+interface WhatWeDoItem {
+  icon: any
+  title: string
+  description: string
+  color: ColorType
+}
+
 export default function AboutUsPage() {
   const [heroVisible, setHeroVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -80,7 +97,8 @@ export default function AboutUsPage() {
     return () => { if (section) observer.unobserve(section) }
   }, [])
 
-  const values = [
+  // Add type annotation to the arrays
+  const values: ValueItem[] = [
     {
       icon: Trophy,
       title: "Excellence",
@@ -119,7 +137,7 @@ export default function AboutUsPage() {
     }
   ]
 
-  const whatWeDo = [
+  const whatWeDo: WhatWeDoItem[] = [
     {
       icon: Target,
       title: "Elite Coaching & Technique",
@@ -188,7 +206,7 @@ export default function AboutUsPage() {
     }
   ]
 
- const getColorClasses = (color: string) => {
+  const getColorClasses = (color: ColorType) => {
     const colors = {
       yellow: { bg: "bg-yellow-500", light: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500", gradient: "from-yellow-500 to-yellow-600" },
       red: { bg: "bg-red-500", light: "bg-red-500/10", text: "text-red-600", border: "border-red-500", gradient: "from-red-500 to-red-600" },
@@ -239,7 +257,6 @@ export default function AboutUsPage() {
                   <span>Join Our Academy</span>
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                
               </div>
             </div>
 
@@ -677,8 +694,6 @@ export default function AboutUsPage() {
               <span>Contact Admissions</span>
             </button>
           </div>
-
-          
         </div>
       </section>
     </div>

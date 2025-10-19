@@ -369,12 +369,10 @@ export default function SignupPage() {
         })
 
       if (uploadError) {
-        console.error('Avatar upload error:', uploadError)
         console.error('Error details:', {
-          message: uploadError.message,
-          statusCode: uploadError.statusCode,
-          error: uploadError
-        })
+        message: uploadError.message,
+        error: uploadError
+})
         return null
       }
 

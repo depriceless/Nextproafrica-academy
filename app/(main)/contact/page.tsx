@@ -6,8 +6,8 @@ import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 export default function ContactPage() {
@@ -19,16 +19,16 @@ export default function ContactPage() {
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState({ type: null, message: '' })
+  const [submitStatus, setSubmitStatus] = useState<{ type: string | null; message: string }>({ type: null, message: '' })
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
@@ -73,11 +73,11 @@ export default function ContactPage() {
         setSubmitStatus({ type: null, message: '' })
       }, 5000)
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting form:', error)
       setSubmitStatus({
         type: 'error',
-        message: error.message || 'Failed to send message. Please try again.'
+        message: error?.message || 'Failed to send message. Please try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -150,14 +150,14 @@ export default function ContactPage() {
     }
   ]
 
-  const getColorClasses = (color) => {
-    const colors = {
+  const getColorClasses = (color: string) => {
+    const colors: Record<string, { bg: string; icon: string }> = {
       yellow: { bg: "bg-yellow-500/10", icon: "text-yellow-600" },
       blue: { bg: "bg-blue-500/10", icon: "text-blue-600" },
       green: { bg: "bg-green-500/10", icon: "text-green-600" },
       red: { bg: "bg-red-500/10", icon: "text-red-600" }
     }
-    return colors[color]
+    return colors[color] || colors.yellow
   }
 
   return (
@@ -232,7 +232,7 @@ export default function ContactPage() {
               </div>
             )}
             
-            <div className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -318,7 +318,7 @@ export default function ContactPage() {
               </div>
 
               <button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={isSubmitting}
                 className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2"
               >
@@ -338,7 +338,7 @@ export default function ContactPage() {
               <p className="text-sm text-gray-500 text-center">
                 We'll respond within 24 hours during business days
               </p>
-            </div>
+            </form>
           </div>
 
           {/* Map and Contact Info */}

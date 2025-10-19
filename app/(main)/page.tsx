@@ -5,15 +5,29 @@ import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Tro
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase lazily
-let supabaseClient = null
+let supabaseClient: ReturnType<typeof createClient> | null = null
+
 const getSupabase = () => {
   if (!supabaseClient) {
     supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
   }
   return supabaseClient
+}
+
+interface FormData {
+  name: string
+  email: string
+  phone: string
+  subject: string
+  message: string
+}
+
+interface SubmitStatus {
+  type: string | null
+  message: string
 }
 
 export default function HomePage() {
@@ -21,13 +35,13 @@ export default function HomePage() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [counts, setCounts] = useState({ players: 0, coaches: 0, years: 0, success: 0 })
   const [activeCategory, setActiveCategory] = useState('all')
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const [storyVisible, setStoryVisible] = useState(false)
   const [programsVisible, setProgramsVisible] = useState(false)
   const [contactVisible, setContactVisible] = useState(false)
   const [valuesVisible, setValuesVisible] = useState(false)
   const [newsVisible, setNewsVisible] = useState(false)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
@@ -35,7 +49,7 @@ export default function HomePage() {
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState({ type: null, message: '' })
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>({ type: null, message: '' })
 
   const slides = [
     {
@@ -123,13 +137,11 @@ export default function HomePage() {
     { icon: Clock, title: "Training Schedule", details: ["Mon, Wed, Fri: 10:00 AM - 12:00 PM", "Saturday: 10:00 AM - 11:00 AM (Gym)"], color: "red" }
   ]
 
-  // Auto-slide hero
   useEffect(() => {
     const timer = setInterval(() => setCurrentSlide((prev) => (prev + 1) % slides.length), 5000)
     return () => clearInterval(timer)
   }, [slides.length])
 
-  // Counter animation
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -156,9 +168,8 @@ export default function HomePage() {
     return () => { if (section) observer.unobserve(section) }
   }, [])
 
-  // Intersection observers for animations
   useEffect(() => {
-    const createObserver = (id, setState) => {
+    const createObserver = (id: string, setState: (state: boolean) => void) => {
       const observer = new IntersectionObserver(([entry]) => setState(entry.isIntersecting), { threshold: 0.1 })
       const section = document.getElementById(id)
       if (section) observer.observe(section)
@@ -182,26 +193,30 @@ export default function HomePage() {
 
   const filteredItems = activeCategory === 'all' ? galleryItems : galleryItems.filter(item => item.category === activeCategory)
 
-  const getColorClasses = (color) => {
-    const colors = {
+  const getColorClasses = (color: string): Record<string, string> => {
+    const colors: Record<string, Record<string, string>> = {
       blue: { gradient: "from-blue-500 to-blue-600", light: "bg-blue-500/10", text: "text-blue-600", border: "border-blue-500/20", hover: "hover:border-blue-500" },
       yellow: { gradient: "from-yellow-500 to-yellow-600", light: "bg-yellow-500/10", text: "text-yellow-600", border: "border-yellow-500/20", hover: "hover:border-yellow-500", bg: "bg-yellow-500/10", icon: "text-yellow-600" },
       green: { gradient: "from-green-500 to-green-600", light: "bg-green-500/10", text: "text-green-600", border: "border-green-500/20", hover: "hover:border-green-500", bg: "bg-green-500/10", icon: "text-green-600" },
       red: { bg: "bg-red-500/10", text: "text-red-600", icon: "text-red-600" }
     }
-    return colors[color]
+    return colors[color] || colors.yellow
   }
 
-  const getCategoryColor = (category) => {
-    const colors = { "Achievement": "bg-yellow-500", "Announcement": "bg-blue-500", "Event": "bg-green-500" }
+  const getCategoryColor = (category: string): string => {
+    const colors: Record<string, string> = { 
+      "Achievement": "bg-yellow-500", 
+      "Announcement": "bg-blue-500", 
+      "Event": "bg-green-500" 
+    }
     return colors[category] || "bg-gray-500"
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
@@ -237,11 +252,11 @@ export default function HomePage() {
         setSubmitStatus({ type: null, message: '' })
       }, 5000)
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting form:', error)
       setSubmitStatus({
         type: 'error',
-        message: error.message || 'Failed to send message. Please try again.'
+        message: error?.message || 'Failed to send message. Please try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -524,7 +539,7 @@ export default function HomePage() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img 
                     src={item.type === 'video' ? item.thumbnail : item.url} 
-                    alt={item.title} 
+                    alt={item.title || 'Gallery item'} 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                     style={{ objectPosition: item.objectPosition || 'center' }}
                     loading="lazy"
@@ -675,7 +690,7 @@ export default function HomePage() {
                 </div>
               )}
               
-              <div className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-300 mb-2">Your Name <span className="text-red-400">*</span></label>
@@ -712,7 +727,7 @@ export default function HomePage() {
                   <textarea name="message" value={formData.message} onChange={handleChange} disabled={isSubmitting} rows={6} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed" placeholder="Tell us more about your inquiry..." />
                 </div>
 
-                <button onClick={handleSubmit} disabled={isSubmitting} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2">
+                <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2">
                   {isSubmitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
@@ -727,7 +742,7 @@ export default function HomePage() {
                 </button>
 
                 <p className="text-sm text-gray-400 text-center">We'll respond within 24 hours during business days</p>
-              </div>
+              </form>
             </div>
 
             <div className={`space-y-6 transition-all duration-1000 delay-300 ${contactVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}>
@@ -756,7 +771,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section> 
+      </section>
     </div>
   )
 }
