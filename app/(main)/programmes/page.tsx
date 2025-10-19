@@ -325,13 +325,7 @@ export default function ProgramsPage() {
                         <p className="text-sm font-bold text-slate-900">{program.sessions}</p>
                       </div>
                       <div>
-                        <div className="flex items-center space-x-1 text-gray-500 mb-1">
-                          <Trophy className="h-3 w-3" />
-                          <span className="text-xs">Price</span>
-                        </div>
-                        <p className="text-sm font-bold text-slate-900">{program.price}</p>
-                      </div>
-                    </div>
+                     
 
                     {/* Features */}
                     <div className="mb-4">
