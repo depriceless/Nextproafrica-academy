@@ -12,6 +12,75 @@ import {
 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 
+// Type definitions
+interface PlayerData {
+  id: string
+  user_id: string
+  position?: string
+  address?: string
+  age_category?: string
+  status?: string
+}
+
+interface Profile {
+  id: string
+  full_name?: string
+  email?: string
+  phone?: string
+  avatar_url?: string
+}
+
+interface TrainingSession {
+  id: string
+  date: string
+  time: string
+  location: string
+  coach: string
+  type: string
+}
+
+interface Payment {
+  id: string
+  date: string
+  amount: string
+  status: string
+  description: string
+}
+
+interface Video {
+  id: string
+  title: string
+  category: string
+  duration: string
+  coach: string
+  date: string
+  url: string
+  views: number
+  likes: number
+}
+
+interface Message {
+  id: number
+  sender: string
+  message: string
+  timestamp: string
+  read: boolean
+}
+
+interface PerformanceDataPoint {
+  week: string
+  rating: number
+  goals: number
+  assists: number
+  count: number
+}
+
+interface PerformanceMetric {
+  metric_type: string
+  metric_value: number | string
+  recorded_at: string
+}
+
 export default function PlayerDashboard() {
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -24,12 +93,12 @@ export default function PlayerDashboard() {
   const [messageInput, setMessageInput] = useState('')
   
   // Data states
-  const [playerData, setPlayerData] = useState<any>(null)
-  const [profile, setProfile] = useState<any>(null)
-  const [trainingSessions, setTrainingSessions] = useState<any[]>([])
-  const [payments, setPayments] = useState<any[]>([])
-  const [videos, setVideos] = useState<any[]>([])
-  const [messages, setMessages] = useState<any[]>([])
+  const [playerData, setPlayerData] = useState<PlayerData | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [trainingSessions, setTrainingSessions] = useState<TrainingSession[]>([])
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [videos, setVideos] = useState<Video[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [stats, setStats] = useState({
     attendance: 0,
     sessionsAttended: 0,
@@ -37,7 +106,7 @@ export default function PlayerDashboard() {
     assists: 0,
     performanceRating: 0
   })
-  const [performanceData, setPerformanceData] = useState<any[]>([])
+  const [performanceData, setPerformanceData] = useState<PerformanceDataPoint[]>([])
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,6 +115,7 @@ export default function PlayerDashboard() {
 
   useEffect(() => {
     checkAuthAndFetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function checkAuthAndFetchData() {
@@ -68,8 +138,9 @@ export default function PlayerDashboard() {
         fetchMessages(user.id)
       ])
 
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      const error = err as Error
+      setError(error.message)
       console.error('Error:', err)
     } finally {
       setLoading(false)
@@ -77,7 +148,7 @@ export default function PlayerDashboard() {
   }
 
   async function fetchProfile(userId: string) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -87,7 +158,7 @@ export default function PlayerDashboard() {
   }
 
   async function fetchPlayerData(userId: string) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('players')
       .select('*')
       .eq('user_id', userId)
@@ -108,7 +179,7 @@ export default function PlayerDashboard() {
 
     if (!player) return
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('training_sessions')
       .select(`*,coaches:coach_id(profiles:user_id(full_name))`)
       .gte('session_date', new Date().toISOString().split('T')[0])
@@ -137,7 +208,7 @@ export default function PlayerDashboard() {
 
     if (!player) return
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('payments')
       .select('*')
       .eq('player_id', player.id)
@@ -165,7 +236,7 @@ export default function PlayerDashboard() {
 
     if (!player) return
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('videos')
       .select('*')
       .eq('player_id', player.id)
@@ -197,7 +268,7 @@ export default function PlayerDashboard() {
 
     if (!player) return
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('messages')
       .select('*')
       .eq('player_id', player.id)
@@ -226,7 +297,7 @@ export default function PlayerDashboard() {
 
     if (!player) return
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('performance_metrics')
       .select('*')
       .eq('player_id', player.id)
@@ -252,7 +323,7 @@ export default function PlayerDashboard() {
   }
 
   async function fetchAttendanceStats(playerId: string) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('session_attendance')
       .select('status')
       .eq('player_id', playerId)
@@ -270,7 +341,7 @@ export default function PlayerDashboard() {
     }
   }
 
-  function groupMetricsByWeek(metrics: any[]) {
+  function groupMetricsByWeek(metrics: PerformanceMetric[]) {
     const weeks = Array.from({ length: 5 }, (_, i) => ({
       week: `Week ${i + 1}`,
       rating: 0,
@@ -347,7 +418,8 @@ export default function PlayerDashboard() {
 
       await fetchProfile(user.id)
       alert('✅ Profile picture updated successfully!')
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error
       console.error('Upload error:', error)
       alert('❌ Error uploading picture: ' + error.message)
     } finally {

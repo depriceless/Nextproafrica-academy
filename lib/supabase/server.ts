@@ -17,8 +17,8 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options)
             })
-          } catch (error) {
-            // Handle error in Server Components
+          } catch {
+            // Handle error in Server Components - error ignored as it's expected in some contexts
           }
         },
       },
