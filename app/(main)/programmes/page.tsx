@@ -309,7 +309,7 @@ export default function ProgramsPage() {
                     </p>
 
                     {/* Info Grid */}
-                    <div className="grid grid-cols-3 gap-3 mb-4 pb-4 border-b border-gray-100">
+                    <div className="grid grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-100">
                       <div>
                         <div className="flex items-center space-x-1 text-gray-500 mb-1">
                           <Calendar className="h-3 w-3" />
@@ -324,7 +324,7 @@ export default function ProgramsPage() {
                         </div>
                         <p className="text-sm font-bold text-slate-900">{program.sessions}</p>
                       </div>
-                      <div>
+                    </div>
                      
 
                     {/* Features */}
