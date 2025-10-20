@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Award, Users, Trophy, Target, Star, Shield, Heart, Zap, Mail, Phone, CheckCircle2, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
 
 export default function CoachesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -110,10 +111,12 @@ export default function CoachesPage() {
       {/* Hero Section */}
       <section className="relative bg-slate-900 py-16 lg:py-20 overflow-hidden mb-16">
         <div className="absolute inset-0">
-          <img 
+          <Image 
             src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1920&q=80" 
             alt="Our Coaches" 
             className="w-full h-full object-cover opacity-20"
+            width={1920}
+            height={1080}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95" />
         </div>
@@ -348,7 +351,7 @@ export default function CoachesPage() {
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">UEFA Licenses</h3>
                 <p className="text-gray-400 text-sm">
-                  European coaching certifications from UEFA's comprehensive coaching pathway
+                  European coaching certifications from UEFA&apos;s comprehensive coaching pathway
                 </p>
               </div>
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">

@@ -459,7 +459,7 @@ export default function SignupPage() {
       console.log('Step 4: Creating player record...')
       
       // Prepare medical info
-      let medicalInfo = []
+      const medicalInfo: string[] = []
       if (formData.hasMedicalCondition === 'Yes' && formData.medicalConditionDetails) {
         medicalInfo.push(`Medical Condition: ${formData.medicalConditionDetails}`)
       }
@@ -511,17 +511,18 @@ export default function SignupPage() {
       console.log('Registration complete! Redirecting...')
       router.push('/auth/signup-success')
       
-    } catch (err: any) {
-      console.error('Signup error:', err)
+  } catch (err) {
+      const error = err as Error
+      console.error('Signup error:', error)
       
-      let errorMessage = err?.message || 'Failed to create account. Please try again.'
+      let errorMessage = error.message || 'Failed to create account. Please try again.'
       
-      if (err?.code === 'over_email_send_rate_limit') {
+      if ((err as { code?: string })?.code === 'over_email_send_rate_limit') {
         errorMessage = 'Too many signup attempts. Please wait a minute and try again.'
-      } else if (err?.code === '23505') {
+      } else if ((err as { code?: string })?.code === '23505') {
         errorMessage = 'This email is already registered. Please sign in instead.'
-      } else if (err?.message?.includes('already registered')) {
-        errorMessage = err.message
+      } else if (error.message?.includes('already registered')) {
+        errorMessage = error.message
       }
       
       setError(errorMessage)
@@ -1005,7 +1006,7 @@ export default function SignupPage() {
               <>
                 <div>
                   <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    Sponsor's Full Name <span className="text-red-400">*</span>
+                    Sponsor&apos;s Full Name <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
                     <Users className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -1164,7 +1165,7 @@ export default function SignupPage() {
                     <li>• Disclose injuries/conditions before training</li>
                     <li>• Warm-up and cool-down are compulsory</li>
                     <li>• Treat facilities and equipment with care</li>
-                    <li>• Serious injuries handled at player/sponsor's cost</li>
+                    <li>• Serious injuries handled at player/sponsor&apos;s cost</li>
                   </ul>
                   <label className="flex items-start space-x-2 cursor-pointer">
                     <input

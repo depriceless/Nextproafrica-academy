@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
+import Image from 'next/image'
 import { 
   Eye, EyeOff, Mail, Lock, AlertCircle, ArrowRight, CheckCircle
 } from 'lucide-react'
@@ -57,8 +58,9 @@ export default function AuthPage() {
 
       router.push('/portal/player')
       router.refresh()
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign in. Please check your credentials.')
+     } catch (err) {
+      const error = err as Error
+      setError(error.message || 'Failed to sign in. Please check your credentials.')
     } finally {
       setIsLoading(false)
     }
@@ -89,10 +91,12 @@ export default function AuthPage() {
       {/* Left Side - Logo */}
       <div className="hidden lg:flex lg:w-1/2 bg-slate-900/50 backdrop-blur-xl p-12 pt-27 items-center justify-center relative overflow-hidden border-r border-slate-700/50">
         <div className="relative z-10 w-full h-full flex items-center justify-center">
-          <img 
+          <Image 
             src="/NPA.jpg" 
             alt="Nextpro Africa FA" 
             className="w-full h-full object-cover rounded-2xl shadow-2xl"
+            width={800}
+            height={600}
           />
         </div>
       </div>
@@ -102,10 +106,12 @@ export default function AuthPage() {
         {/* Mobile Logo */}
      {/* Mobile Logo */}
 <div className="lg:hidden w-full h-48 mb-20">
-          <img 
+          <Image 
             src="/NPA.jpg" 
-            alt="Nextpro Africa FA" 
+            alt="Nextpro Africa FA"
             className="w-full h-full object-cover"
+            width={800}
+            height={600}
           />
         </div>
         
@@ -253,7 +259,7 @@ export default function AuthPage() {
               </div>
 
               <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-6 mb-6">
-                <h4 className="text-white font-semibold mb-4">What you'll get:</h4>
+                <h4 className="text-white font-semibold mb-4">What you&apos;ll get:</h4>
                 <ul className="space-y-3">
                   {[
                     'Personalized training schedules',

@@ -1,6 +1,3 @@
-// ============================================
-// FILE: /app/update-password/page.tsx
-// ============================================
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -25,6 +22,7 @@ export default function UpdatePasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  
   useEffect(() => {
     // Check if user has valid session from reset link
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -32,7 +30,7 @@ export default function UpdatePasswordPage() {
         router.push('/login')
       }
     })
-  }, [])
+  }, [router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -67,8 +65,9 @@ export default function UpdatePasswordPage() {
       setTimeout(() => {
         router.push('/login')
       }, 2000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to update password. Please try again.')
+   } catch (err) {
+      const error = err as Error
+      setError(error.message || 'Failed to update password. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -205,4 +204,3 @@ export default function UpdatePasswordPage() {
     </div>
   )
 }
-

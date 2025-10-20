@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MapPin, Phone, Mail, Clock, ChevronRight, Send, CheckCircle, AlertCircle, Facebook, Twitter, Instagram, Youtube, MessageCircle } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
+import Image from 'next/image'
 
 // Initialize Supabase
 const supabase = createClient(
@@ -73,11 +74,12 @@ export default function ContactPage() {
         setSubmitStatus({ type: null, message: '' })
       }, 5000)
 
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error
       console.error('Error submitting form:', error)
       setSubmitStatus({
         type: 'error',
-        message: error?.message || 'Failed to send message. Please try again.'
+        message: error.message || 'Failed to send message. Please try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -165,10 +167,12 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="relative bg-slate-900 py-16 lg:py-20 overflow-hidden mb-16">
         <div className="absolute inset-0">
-          <img 
+          <Image 
             src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&q=80" 
             alt="Contact Us" 
             className="w-full h-full object-cover opacity-20"
+            width={1920}
+            height={1080}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95" />
         </div>
@@ -189,7 +193,7 @@ export default function ContactPage() {
           </h1>
           
           <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Have questions? We'd love to hear from you. Contact us via any of our channels.
+            Have questions? We&apos;d love to hear from you. Contact us via any of our channels.
           </p>
         </div>
       </section>
@@ -336,7 +340,7 @@ export default function ContactPage() {
               </button>
 
               <p className="text-sm text-gray-500 text-center">
-                We'll respond within 24 hours during business days
+                We&apos;ll respond within 24 hours during business days
               </p>
             </form>
           </div>
@@ -451,7 +455,7 @@ export default function ContactPage() {
                 answer: "Yes, we offer merit-based scholarships for talented players who demonstrate exceptional commitment and skill."
               },
               {
-                question: "Can parents watch training?",
+                question:  "Can parents watch training?",
                 answer: "Absolutely! We have a dedicated viewing area where parents can watch training sessions."
               }
             ].map((faq, index) => (

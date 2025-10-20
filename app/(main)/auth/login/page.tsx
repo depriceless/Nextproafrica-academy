@@ -6,7 +6,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
-import { Eye, EyeOff, LogIn, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react'
+import { Eye, EyeOff, LogIn, Mail, Lock, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -58,8 +58,9 @@ export default function LoginPage() {
 
       router.push('/portal/player')
       router.refresh()
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign in. Please check your credentials.')
+    } catch (err) {
+      const error = err as Error
+      setError(error.message || 'Failed to sign in. Please check your credentials.')
     } finally {
       setIsLoading(false)
     }

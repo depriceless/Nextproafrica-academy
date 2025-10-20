@@ -1,20 +1,21 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Trophy, Award, Target, Users, Heart, Shield, Zap, Star, ChevronRight, Medal, TrendingUp, Globe, ArrowRight, CheckCircle, Linkedin, Mail, BookOpen, Briefcase, Map } from 'lucide-react'
+import { Trophy, Award, Target, Users, Heart, Shield, Zap, Star, ChevronRight, TrendingUp, Globe, ArrowRight, CheckCircle, Linkedin, Mail, BookOpen, Briefcase, Map } from 'lucide-react'
+import { LucideIcon } from 'lucide-react'
 
 // Add type definitions at the top level
 type ColorType = 'yellow' | 'red' | 'blue' | 'purple' | 'green' | 'orange'
 
 interface ValueItem {
-  icon: any
+  icon: LucideIcon
   title: string
   description: string
   color: ColorType
 }
 
 interface WhatWeDoItem {
-  icon: any
+  icon: LucideIcon
   title: string
   description: string
   color: ColorType
@@ -97,7 +98,6 @@ export default function AboutUsPage() {
     return () => { if (section) observer.unobserve(section) }
   }, [])
 
-  // Add type annotation to the arrays
   const values: ValueItem[] = [
     {
       icon: Trophy,
@@ -302,7 +302,7 @@ export default function AboutUsPage() {
               </p>
               
               <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                What started as a vision to bridge the gap between raw talent and professional opportunity has grown into one of Nigeria's most respected football academies. Our success is built on a foundation of excellence, integrity, and an unwavering commitment to developing not just great footballers, but outstanding individuals who can succeed both on and off the pitch.
+                What started as a vision to bridge the gap between raw talent and professional opportunity has grown into one of Nigeria&apos;s most respected football academies. Our success is built on a foundation of excellence, integrity, and an unwavering commitment to developing not just great footballers, but outstanding individuals who can succeed both on and off the pitch.
               </p>
 
               <button className="group bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2">
@@ -449,7 +449,7 @@ export default function AboutUsPage() {
               </h2>
               
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Our primary training base is <span className="font-bold text-slate-900">Liberty Stadium, Ibadan</span>. We're actively expanding pitch access — including plans to use Adamasingba training ground — to increase training slots and competitive opportunities for our academy players.
+                Our primary training base is <span className="font-bold text-slate-900">Liberty Stadium, Ibadan</span>. We&apos;re actively expanding pitch access — including plans to use Adamasingba training ground — to increase training slots and competitive opportunities for our academy players.
               </p>
 
               <div className="space-y-4">
@@ -607,7 +607,7 @@ export default function AboutUsPage() {
               Get Involved
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Whether you're a parent, coach, scout, sponsor or volunteer — we'd love to hear from you. Help us train the next generation of African professionals.
+              Whether you&apos;re a parent, coach, scout, sponsor or volunteer — we&apos;d love to hear from you. Help us train the next generation of African professionals.
             </p>
           </div>
 

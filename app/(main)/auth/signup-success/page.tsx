@@ -33,13 +33,13 @@ export default function SignupSuccessPage() {
                 <Mail className="h-6 w-6 text-yellow-500" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">What's Next?</h3>
+                <h3 className="text-lg font-bold text-white mb-2">What&apos;s Next?</h3>
                 <div className="space-y-3 text-gray-300 text-sm">
                 
                     <span className="inline-block w-6 h-6 bg-yellow-500/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                       <span className="text-yellow-500 font-bold">1</span>
                     </span>
-                    <span>We've sent a verification email to your inbox. Please check and verify your email address.</span>
+                         <span>We&apos;ve sent a verification email to your inbox. Please check and verify your email address.</span>
                  <p className="flex items-start">
                     <span className="inline-block w-6 h-6 bg-yellow-500/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                       <span className="text-yellow-500 font-bold">2</span>

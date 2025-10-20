@@ -34,8 +34,9 @@ export default function ResetPasswordPage() {
 
       setSuccess(true)
       setEmail('')
-    } catch (err: any) {
-      setError(err.message || 'Failed to send reset email. Please try again.')
+   } catch (err) {
+      const error = err as Error
+      setError(error.message || 'Failed to send reset email. Please try again.')
     } finally {
       setIsLoading(false)
     }

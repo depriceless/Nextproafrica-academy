@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Trophy, MapPin, Phone, Mail, Clock, CircleCheck, AlertCircle } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
+import Image from 'next/image'
 
 // Initialize Supabase lazily
 let supabaseClient: ReturnType<typeof createClient<Database>> | null = null
