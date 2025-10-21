@@ -44,8 +44,8 @@ export default function Header() {
               </div>
             </Link>
 
-            <div className="hidden lg:flex items-center flex-1 justify-end gap-8">
-              <nav className="flex items-center gap-1 ml-[100px]">
+            <div className="hidden lg:flex items-center flex-1 justify-end gap-6">
+              <nav className="flex items-center gap-1 ml-[97px]">
                 <Link href="/" className="relative text-gray-300 hover:text-white transition font-semibold text-sm tracking-wide whitespace-nowrap group px-3 py-2">
                   Home
                   <span className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
