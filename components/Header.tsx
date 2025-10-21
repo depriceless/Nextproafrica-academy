@@ -75,7 +75,7 @@ export default function Header() {
                     <span className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                   </button>
                   
-                  <div className="absolute top-full left-0 mt-8 w-52 bg-slate-800 border border-yellow-500/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+                 <div className="absolute top-full left-0 mt-2 w-52 bg-slate-800 border border-yellow-500/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
                     <Link href="/news" className="block px-5 py-3 text-base text-gray-300 hover:text-white hover:bg-slate-700 transition-colors rounded-t-lg font-medium">
                       News & Events
                     </Link>
