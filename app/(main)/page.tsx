@@ -5,6 +5,7 @@ import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Tro
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
 import Image from 'next/image'
+import Link from 'next/link'
 
 // Initialize Supabase lazily
 let supabaseClient: ReturnType<typeof createClient<Database>> | null = null
@@ -18,6 +19,7 @@ const getSupabase = () => {
   }
   return supabaseClient
 }
+
 interface FormData {
   name: string
   email: string
@@ -297,10 +299,10 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto text-center">{slides[currentSlide].description}</p>
 
               <div className="flex flex-wrap gap-4 justify-center">
-                <button className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
+                <Link href="/auth/signup" className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
                   <span>Join Academy</span>
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </button>
+                </Link>
                 <button onClick={() => setIsVideoPlaying(true)} className="group relative bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center space-x-2">
                   <Play className="h-5 w-5" />
                   <span>Watch Video</span>
@@ -400,10 +402,10 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <button className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+              <Link href="/about" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
                 <span>Learn More About Us</span>
                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -490,10 +492,10 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  <button className={`w-full bg-gradient-to-r ${colors.gradient} hover:shadow-xl text-white px-6 py-4 rounded-lg font-bold text-base transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2 mt-6`}>
+                  <Link href="/auth/signup" className={`w-full bg-gradient-to-r ${colors.gradient} hover:shadow-xl text-white px-6 py-4 rounded-lg font-bold text-base transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2 mt-6`}>
                     <span>Enroll Now</span>
                     <ChevronRight className="h-5 w-5" />
-                  </button>
+                  </Link>
                 </div>
               )
             })}
@@ -501,10 +503,10 @@ export default function HomePage() {
 
           <div className="mt-16 text-center">
             <p className="text-gray-600 mb-4">Not sure which program is right for you?</p>
-            <button className="group bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2 mx-auto">
+            <Link href="/contact" className="group bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2 mx-auto inline-flex">
               <span>Schedule a Free Trial</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -568,10 +570,10 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <button className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+            <Link href="/gallery" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
               <span>View Full Gallery</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -649,10 +651,10 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <button className="group inline-flex bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+            <Link href="/news" className="group inline-flex bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
               <span>View All News</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
