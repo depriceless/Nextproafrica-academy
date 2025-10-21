@@ -81,7 +81,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex" style={{ paddingTop: '110px' }}>
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" />
@@ -89,7 +89,7 @@ export default function AuthPage() {
       </div>
 
       {/* Left Side - Logo */}
-      <div className="hidden lg:flex lg:w-1/2 bg-slate-900/50 backdrop-blur-xl p-12 pt-27 items-center justify-center relative overflow-hidden border-r border-slate-700/50">
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-900/50 backdrop-blur-xl p-12 items-center justify-center relative overflow-hidden border-r border-slate-700/50">
         <div className="relative z-10 w-full h-full flex items-center justify-center">
           <Image 
             src="/NPA.jpg" 
@@ -102,10 +102,9 @@ export default function AuthPage() {
       </div>
 
       {/* Right Side - Auth Form */}
-      <div className="flex-1 flex flex-col lg:items-center lg:justify-center relative">
+      <div className="flex-1 flex flex-col lg:items-center lg:justify-center relative" style={{ paddingTop: '0' }}>
         {/* Mobile Logo */}
-     {/* Mobile Logo */}
-<div className="lg:hidden w-full h-48 mb-20">
+        <div className="lg:hidden w-full h-40 mb-8">
           <Image 
             src="/NPA.jpg" 
             alt="Nextpro Africa FA"
