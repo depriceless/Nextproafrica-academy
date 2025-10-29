@@ -194,6 +194,8 @@ export default function HomePage() {
     }
   }, [])
 
+  
+
   const filteredItems = activeCategory === 'all' ? galleryItems : galleryItems.filter(item => item.category === activeCategory)
 
   const getColorClasses = (color: string): Record<string, string> => {
@@ -299,7 +301,7 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto text-center">{slides[currentSlide].description}</p>
 
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link href="/auth/signup" className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
+                <Link href="/auth/signup" className="group relative bg-[#CB0010] hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
                   <span>Join Academy</span>
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
