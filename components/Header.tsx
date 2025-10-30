@@ -9,7 +9,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 w-full bg-slate-900 shadow-lg z-50">
-      <div className=" bg-[#CB0010] -800 border-b border-yellow-500/20">
+      <div className="bg-slate-800 border-b border-yellow-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-10">
             <p className="text-sm text-gray-400 font-medium">Official Site Nextpro Africa FA</p>
