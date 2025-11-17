@@ -90,19 +90,19 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: "Visit Us",
-      details: ["123 Sports Avenue, Ring Road", "Ibadan, Oyo State, Nigeria"],
+      details: ["c/o Edge hill low pratice,Alpe Building, Sw8/12114, liberty Road Ibadan,oyo state"],
       color: "yellow"
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: ["+234 803 456 7890", "+234 805 123 4567"],
+      details:["+2348101740717,    +2340789612151"],
       color: "blue"
     },
     {
       icon: Mail,
       title: "Email Us",
-      details: ["info@nextproafrica.com", "admissions@nextproafrica.com"],
+      details: ["NextproAfrica2025@gmail.com"],
       color: "green"
     },
     {

@@ -1,24 +1,8 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Trophy, MapPin, Phone, Mail, Clock, CircleCheck, AlertCircle } from 'lucide-react'
-import { createClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/supabase'
-import Image from 'next/image'
-import Link from 'next/link'
-
-// Initialize Supabase lazily
-let supabaseClient: ReturnType<typeof createClient<Database>> | null = null
-
-const getSupabase = () => {
-  if (!supabaseClient) {
-    supabaseClient = createClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-  }
-  return supabaseClient
-}
+import { useState, useEffect, useRef } from 'react'
+import { ChevronRight, Play, Users, Target, Star, Award, Shield, Zap, Heart, Trophy, MapPin, Phone, Mail, Clock, CircleCheck, AlertCircle, X, Calendar } from 'lucide-react'
+import { galleryItems, categories } from '../data/galleryData'
 
 interface FormData {
   name: string
@@ -33,6 +17,15 @@ interface SubmitStatus {
   message: string
 }
 
+// Match schedule data
+const matchSchedule = [
+  { id: 1, date: "2025-11-15", time: "15:00", homeTeam: "Nextpro Africa FA", awayTeam: "City Rovers", venue: "Main Stadium", competition: "League", homeScore: null, awayScore: null },
+  { id: 2, date: "2025-11-22", time: "17:30", homeTeam: "United FC", awayTeam: "Nextpro Africa FA", venue: "City Arena", competition: "Cup Quarterfinal", homeScore: null, awayScore: null },
+  { id: 3, date: "2025-11-29", time: "16:00", homeTeam: "Nextpro Africa FA", awayTeam: "Youth Academy", venue: "Training Ground", competition: "Friendly", homeScore: null, awayScore: null },
+  { id: 4, date: "2025-12-06", time: "15:00", homeTeam: "Nextpro Africa FA", awayTeam: "Victory SC", venue: "Main Stadium", competition: "League", homeScore: null, awayScore: null },
+  { id: 5, date: "2025-12-13", time: "14:00", homeTeam: "Champions United", awayTeam: "Nextpro Africa FA", venue: "National Stadium", competition: "League", homeScore: null, awayScore: null }
+]
+
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
@@ -44,6 +37,10 @@ export default function HomePage() {
   const [contactVisible, setContactVisible] = useState(false)
   const [valuesVisible, setValuesVisible] = useState(false)
   const [newsVisible, setNewsVisible] = useState(false)
+  const [matchesVisible, setMatchesVisible] = useState(false)
+  const [registrationVisible, setRegistrationVisible] = useState(false)
+  const [visibleGalleryItems, setVisibleGalleryItems] = useState<Set<number>>(new Set())
+  const galleryRefs = useRef<(HTMLDivElement | null)[]>([])
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -110,23 +107,6 @@ export default function HomePage() {
     }
   ]
 
-  const categories = [
-    { id: 'all', label: 'All Media' },
-    { id: 'training', label: 'Training' },
-    { id: 'matches', label: 'Matches' },
-    { id: 'events', label: 'Events' },
-    { id: 'facilities', label: 'Facilities' }
-  ]
-
-  const galleryItems = [
-    { id: 1, url: '/match.jpg', category: 'training', objectPosition: 'top', type: 'image' },
-    { id: 2, url: '/matchii.jpg', category: 'matches', objectPosition: 'top', type: 'image' },
-    { id: 3, url: '/matchiii.jpg', category: 'events', objectPosition: 'top', type: 'image' },
-    { id: 4, type: 'video', thumbnail: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800&q=80', category: 'events', title: 'Academy Graduation 2024', description: 'Celebrating our graduates' },
-    { id: 5, type: 'image', url: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800&q=80', category: 'facilities', title: 'Training Ground', description: 'State-of-the-art facilities', objectPosition: 'top' },
-    { id: 6, type: 'image', url: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80', category: 'matches', title: 'Victory Celebration', description: 'Team celebrating tournament win', objectPosition: 'top' },
-  ]
-
   const newsArticles = [
     { id: 1, title: "U-17 Team Wins Regional Championship", excerpt: "Our Under-17 squad dominated the regional championship, securing first place with an impressive 5-0 victory in the final match.", image: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80", category: "Achievement", date: "October 5, 2025", author: "Coach Michael", readTime: "3 min read" },
     { id: 2, title: "New UEFA-Certified Coaches Join Our Team", excerpt: "We're excited to announce the addition of three new UEFA-certified coaches who bring international experience to our academy.", image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80", category: "Announcement", date: "October 1, 2025", author: "Admin", readTime: "2 min read" },
@@ -135,7 +115,7 @@ export default function HomePage() {
 
   const contactInfo = [
     { icon: MapPin, title: "Visit Us", details: ["123 Sports Avenue, Ring Road", "Ibadan, Oyo State, Nigeria"], color: "yellow" },
-    { icon: Phone, title: "Call Us", details: ["+234 803 456 7890"], color: "blue" },
+    { icon: Phone, title: "Call Us", details: ["+2348101740717"], color: "blue" },
     { icon: Mail, title: "Email Us", details: ["Nextproafrica2025@gmail.com"], color: "green" },
     { icon: Clock, title: "Training Schedule", details: ["Mon, Wed, Fri: 10:00 AM - 12:00 PM", "Saturday: 10:00 AM - 11:00 AM (Gym)"], color: "red" }
   ]
@@ -184,6 +164,8 @@ export default function HomePage() {
     const cleanup3 = createObserver('programmes', setProgramsVisible)
     const cleanup4 = createObserver('news', setNewsVisible)
     const cleanup5 = createObserver('contact', setContactVisible)
+    const cleanup6 = createObserver('matches', setMatchesVisible)
+    const cleanup7 = createObserver('registration', setRegistrationVisible)
 
     return () => {
       cleanup1()
@@ -191,8 +173,43 @@ export default function HomePage() {
       cleanup3()
       cleanup4()
       cleanup5()
+      cleanup6()
+      cleanup7()
     }
   }, [])
+
+  // Gallery scroll animation effect
+  useEffect(() => {
+    const currentFilteredItems = activeCategory === 'all' ? galleryItems : galleryItems.filter(item => item.category === activeCategory)
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0')
+            setVisibleGalleryItems(prev => new Set([...prev, index]))
+          }
+        })
+      },
+      { threshold: 0.2, rootMargin: '50px' }
+    )
+
+    galleryRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref)
+    })
+
+    return () => {
+      galleryRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref)
+      })
+    }
+  }, [activeCategory])
+
+  // Reset gallery animations when category changes
+  useEffect(() => {
+    setVisibleGalleryItems(new Set())
+    galleryRefs.current = []
+  }, [activeCategory])
 
   const filteredItems = activeCategory === 'all' ? galleryItems : galleryItems.filter(item => item.category === activeCategory)
 
@@ -216,7 +233,10 @@ export default function HomePage() {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    if (name in formData) {
+      setFormData({ ...formData, [name]: value })
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -229,21 +249,12 @@ export default function HomePage() {
         throw new Error('Please fill in all required fields')
       }
 
-      const supabase = getSupabase()
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone || null,
-            subject: formData.subject,
-            message: formData.message,
-            user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-          }
-        ])
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address')
+      }
 
-      if (error) throw error
+      await new Promise(resolve => setTimeout(resolve, 1500))
 
       setSubmitStatus({
         type: 'success',
@@ -266,10 +277,17 @@ export default function HomePage() {
     }
   }
 
+  const formatMatchDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  }
+
+  const isHomeMatch = (match: typeof matchSchedule[0]) => match.homeTeam === "Nextpro Africa FA"
+
   return (
-    <div>
+    <div className="bg-white">
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen bg-slate-900 overflow-hidden pt-20">
+      <section id="home" className="relative h-[85vh] bg-slate-900 overflow-hidden pt-20">
         <div className="absolute inset-0">
           {slides.map((slide, index) => (
             <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
@@ -284,11 +302,11 @@ export default function HomePage() {
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 min-h-screen flex items-center justify-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 h-full flex items-center justify-center">
           <div className="w-full">
-            <div className="space-y-8 max-w-4xl mx-auto text-center flex flex-col items-center">
-              <div className="space-y-4 flex flex-col items-center">
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-tight text-center">{slides[currentSlide].title}</h1>
+            <div className="space-y-6 max-w-4xl mx-auto text-center flex flex-col items-center">
+              <div className="space-y-3 flex flex-col items-center">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight text-center">{slides[currentSlide].title}</h1>
                 <div className="flex items-center justify-center space-x-3">
                   <div className="h-1 w-12 bg-yellow-500" />
                   <p className="text-xl sm:text-2xl font-bold text-yellow-500 text-center">{slides[currentSlide].subtitle}</p>
@@ -296,13 +314,13 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto text-center">{slides[currentSlide].description}</p>
+              <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto text-center">{slides[currentSlide].description}</p>
 
-              <div className="flex flex-wrap gap-4 justify-center">
-                <Link href="/auth/signup" className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
-                  <span>Join Academy</span>
+              <div className="flex flex-wrap gap-3 justify-center">
+                <a href="/auth/signup" className="group relative bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 flex items-center space-x-2">
+                  <span>Get started</span>
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                </a>
                 <button onClick={() => setIsVideoPlaying(true)} className="group relative bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center space-x-2">
                   <Play className="h-5 w-5" />
                   <span>Watch Video</span>
@@ -314,14 +332,26 @@ export default function HomePage() {
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
           {slides.map((_, index) => (
-            <button key={index} onClick={() => setCurrentSlide(index)} className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-yellow-500 w-12' : 'bg-white/30 w-2 hover:bg-white/50'}`} />
+            <button 
+              key={index} 
+              onClick={() => setCurrentSlide(index)} 
+              className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-yellow-500 w-12' : 'bg-white/30 w-2 hover:bg-white/50'}`}
+              aria-label={`Go to slide ${index + 1}`}
+              aria-current={index === currentSlide}
+            />
           ))}
         </div>
 
         {isVideoPlaying && (
           <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4" onClick={() => setIsVideoPlaying(false)}>
             <div className="relative w-full max-w-5xl aspect-video bg-slate-900 rounded-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-              <button onClick={() => setIsVideoPlaying(false)} className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors">✕</button>
+              <button 
+                onClick={() => setIsVideoPlaying(false)} 
+                className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                aria-label="Close video"
+              >
+                <X className="h-6 w-6" />
+              </button>
               <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="Academy Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
             </div>
           </div>
@@ -389,7 +419,7 @@ export default function HomePage() {
                   <div className="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center mb-4">
                     <Trophy className="h-6 w-6 text-yellow-600" />
                   </div>
-                  <h4 className="text-xl font-bold text-slate-900 mb-2">UEFA Certified</h4>
+                  <h4 className="text-xl font-bold text-slate-900 mb-2">NPA Certified</h4>
                   <p className="text-gray-600 text-sm">International standard coaching qualifications</p>
                 </div>
 
@@ -402,10 +432,10 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <Link href="/about" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+              <a href="/about" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
                 <span>Learn More About Us</span>
                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -492,10 +522,10 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  <Link href="/auth/signup" className={`w-full bg-gradient-to-r ${colors.gradient} hover:shadow-xl text-white px-6 py-4 rounded-lg font-bold text-base transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2 mt-6`}>
+                  <a href="/auth/signup" className={`w-full bg-gradient-to-r ${colors.gradient} hover:shadow-xl text-white px-6 py-4 rounded-lg font-bold text-base transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2 mt-6`}>
                     <span>Enroll Now</span>
                     <ChevronRight className="h-5 w-5" />
-                  </Link>
+                  </a>
                 </div>
               )
             })}
@@ -503,10 +533,10 @@ export default function HomePage() {
 
           <div className="mt-16 text-center">
             <p className="text-gray-600 mb-4">Not sure which program is right for you?</p>
-            <Link href="/contact" className="group bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2 mx-auto inline-flex">
+            <a href="/contact" className="group bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2 mx-auto inline-flex">
               <span>Schedule a Free Trial</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -525,7 +555,7 @@ export default function HomePage() {
               <span className="text-sm font-semibold text-yellow-500 tracking-wide">Gallery</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">Moments That Matter</h2>
-            <p className="text-base sm:text-lg text-gray-400 leading-relaxed">Explore our journey through photos and videos - from intense training sessions to championship victories.</p>
+            <p className="text-base sm:text-lg text-gray-400 leading-relaxed">Explore our journey through photos - from intense training sessions to championship victories.</p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 mb-12">
@@ -537,63 +567,83 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => (
-              <div key={item.id} className="group relative bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer" onClick={() => setSelectedImage(item.id)}>
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img 
-                    src={item.type === 'video' ? item.thumbnail : item.url} 
-                    alt={item.title || 'Gallery item'} 
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                    style={{ objectPosition: item.objectPosition || 'center' }}
-                    loading="lazy"
-                  />
-                  
-                  {item.type === 'video' && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-yellow-500/90 backdrop-blur-sm rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg">
-                        <Play className="h-8 w-8 text-slate-900 ml-1" fill="currentColor" />
+            {filteredItems.map((item, index) => {
+              const isVisible = visibleGalleryItems.has(index)
+              return (
+                <div 
+                  key={item.id} 
+                  ref={(el) => { galleryRefs.current[index] = el }}
+                  data-index={index}
+                  className={`group relative bg-slate-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-700 cursor-pointer transform ${
+                    isVisible 
+                      ? 'opacity-100 scale-100 translate-y-0' 
+                      : 'opacity-0 scale-95 translate-y-10'
+                  }`}
+                  onClick={() => setSelectedImage(item.id)}
+                  style={{ 
+                    transitionDelay: `${index * 50}ms`
+                  }}
+                >
+                  <div className="relative aspect-[5/6] overflow-hidden">
+                    <img 
+                      src={item.url} 
+                      alt={item.title || 'Gallery item'} 
+                      className={`w-full h-full object-cover transform transition-all duration-1000 bg-slate-900 ${
+                        isVisible 
+                          ? 'scale-100 opacity-100' 
+                          : 'scale-110 opacity-0'
+                      } group-hover:scale-105`}
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                    
+                    <div className="absolute inset-0 flex items-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                      <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 className="text-xl font-bold text-white mb-1">{item.title}</h3>
+                        <p className="text-gray-300 text-sm">{item.description}</p>
                       </div>
                     </div>
-                  )}
+                    
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000" />
+                    </div>
+                  </div>
 
-                  <div className="absolute top-4 right-4 bg-yellow-500 text-slate-900 px-3 py-1 rounded-full text-xs font-bold uppercase">{item.type}</div>
+                  <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/60 rounded-2xl transition-all duration-500 pointer-events-none" />
+                  
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                 </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-500 transition-colors">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.description}</p>
-                </div>
-
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/50 rounded-2xl transition-all duration-300 pointer-events-none" />
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           <div className="mt-12 text-center">
-            <Link href="/gallery" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+            <a href="/gallery" className="group inline-flex bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
               <span>View Full Gallery</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </a>
           </div>
         </div>
 
         {selectedImage && (
-          <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300" onClick={() => setSelectedImage(null)}>
-            <button onClick={() => setSelectedImage(null)} className="absolute top-4 right-4 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors text-2xl">✕</button>
+          <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+            <button 
+              onClick={() => setSelectedImage(null)} 
+              className="absolute top-4 right-4 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors text-2xl"
+              aria-label="Close image"
+            >
+              <X className="h-6 w-6" />
+            </button>
             <div className="relative max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
-              {galleryItems.find(item => item.id === selectedImage)?.type === 'video' ? (
-                <div className="aspect-video bg-slate-900 rounded-2xl overflow-hidden">
-                  <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
-                </div>
-              ) : (
-                <div>
-                  <img src={galleryItems.find(item => item.id === selectedImage)?.url} alt="Gallery" className="w-full h-auto rounded-2xl shadow-2xl" />
-                  <div className="mt-4 text-center">
-                    <h3 className="text-2xl font-bold text-white mb-2">{galleryItems.find(item => item.id === selectedImage)?.title}</h3>
-                    <p className="text-gray-400">{galleryItems.find(item => item.id === selectedImage)?.description}</p>
-                  </div>
-                </div>
-              )}
+              <img 
+                src={galleryItems.find(item => item.id === selectedImage)?.url} 
+                alt="Gallery" 
+                className="w-full h-auto rounded-2xl shadow-2xl max-h-[85vh] object-contain" 
+              />
+              <div className="mt-6 text-center bg-slate-800/80 backdrop-blur-sm rounded-xl p-6">
+                <h3 className="text-2xl font-bold text-white mb-2">{galleryItems.find(item => item.id === selectedImage)?.title}</h3>
+                <p className="text-gray-400">{galleryItems.find(item => item.id === selectedImage)?.description}</p>
+              </div>
             </div>
           </div>
         )}
@@ -651,10 +701,130 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <Link href="/news" className="group inline-flex bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
+            <a href="/news" className="group inline-flex bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 items-center space-x-2">
               <span>View All News</span>
               <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Registration Section */}
+      <section id="registration" className="relative bg-white py-16 lg:py-20 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center space-x-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-2 mb-4">
+              <Shield className="h-5 w-5 text-yellow-600" />
+              <span className="text-sm font-semibold text-yellow-600 tracking-wide">Official Registration</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-4">Certified & Accredited Academy</h2>
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">Fully registered with government bodies and sports associations for professional football training.</p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            
+            <div className={`space-y-6 transition-all duration-1000 delay-300 ${registrationVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
+              
+              <div className="group bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 border border-slate-200 hover:border-green-300 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+                <div className="flex items-start space-x-4 mb-6">
+                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                    <Shield className="h-6 w-6 text-white group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors duration-300">OYO State FA Registered</h3>
+                    <p className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">Official member of the state football association with full accreditation for youth development programs.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-gray-500">Registration Active</span>
+                  </div>
+                  <span className="text-green-600 font-semibold text-sm bg-green-50 px-3 py-1 rounded-full group-hover:bg-green-100 transition-colors duration-300">Verified</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className={`bg-blue-50 rounded-xl p-6 border border-blue-200 text-center hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-500 group cursor-pointer ${registrationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '400ms' }}>
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-bold text-slate-900 text-sm mb-1 group-hover:text-blue-700 transition-colors duration-300">CAC Registered</h4>
+                  <p className="text-gray-600 text-xs group-hover:text-gray-700 transition-colors duration-300">Legal Business Entity</p>
+                </div>
+
+                <div className={`bg-purple-50 rounded-xl p-6 border border-purple-200 text-center hover:border-purple-300 hover:shadow-lg hover:scale-105 transition-all duration-500 group cursor-pointer ${registrationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '500ms' }}>
+                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-bold text-slate-900 text-sm mb-1 group-hover:text-purple-700 transition-colors duration-300">Youth Sports</h4>
+                  <p className="text-gray-600 text-xs group-hover:text-gray-700 transition-colors duration-300">Approved Program</p>
+                </div>
+              </div>
+
+              <div className={`bg-yellow-50 rounded-xl p-6 border border-yellow-200 hover:border-yellow-300 hover:shadow-lg transition-all duration-500 ${registrationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
+                <h4 className="font-bold text-slate-900 mb-3 flex items-center group">
+                  <svg className="w-5 h-5 text-yellow-600 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Why Choose Registered Academy?
+                </h4>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  {[
+                    "Verified coaching qualifications",
+                    "Safe and insured facilities",
+                    "Structured development pathways",
+                    "Professional standards maintained"
+                  ].map((benefit, index) => (
+                    <li 
+                      key={index} 
+                      className="flex items-center space-x-2 group hover:translate-x-2 transition-transform duration-300"
+                      style={{ transitionDelay: `${700 + index * 100}ms` }}
+                    >
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
+                      <span className="group-hover:text-slate-800 transition-colors duration-300">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className={`relative transition-all duration-1000 delay-200 ${registrationVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}>
+              <div className="bg-slate-100 rounded-2xl p-8 border border-slate-200 hover:shadow-xl hover:border-slate-300 transition-all duration-500 group">
+                <div className="relative bg-white rounded-xl shadow-lg p-6 group-hover:shadow-2xl transition-all duration-500">
+                  <img 
+                    src="/registration.jpg" 
+                    alt="Official Academy Registration Certificate" 
+                    className="w-full h-auto max-w-md mx-auto object-contain group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute -top-3 -right-3 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  
+                  <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-300"></div>
+                  <div className="absolute -top-2 -right-2 w-3 h-3 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-500"></div>
+                </div>
+                <div className="text-center mt-6">
+                  <p className="text-sm text-gray-600 font-medium group-hover:text-slate-800 transition-colors duration-300">Official Registration Document</p>
+                  <p className="text-xs text-gray-500 mt-1 group-hover:text-gray-600 transition-colors duration-300">Verified and authenticated by governing bodies</p>
+                </div>
+              </div>
+              
+              <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse" />
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-yellow-500/10 rounded-full blur-xl animate-pulse delay-1000" />
+            </div>
           </div>
         </div>
       </section>
@@ -696,25 +866,65 @@ export default function HomePage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-300 mb-2">Your Name <span className="text-red-400">*</span></label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="John Doe" />
+                    <label htmlFor="name" className="block text-sm font-semibold text-gray-300 mb-2">Your Name <span className="text-red-400">*</span></label>
+                    <input 
+                      type="text" 
+                      id="name"
+                      name="name" 
+                      value={formData.name} 
+                      onChange={handleChange} 
+                      disabled={isSubmitting}
+                      required
+                      aria-required="true"
+                      className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                      placeholder="John Doe" 
+                    />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-semibold text-gray-300 mb-2">Email Address <span className="text-red-400">*</span></label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="john@example.com" />
+                    <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">Email Address <span className="text-red-400">*</span></label>
+                    <input 
+                      type="email" 
+                      id="email"
+                      name="email" 
+                      value={formData.email} 
+                      onChange={handleChange} 
+                      disabled={isSubmitting}
+                      required
+                      aria-required="true"
+                      className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                      placeholder="john@example.com" 
+                    />
                   </div>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-300 mb-2">Phone Number</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" placeholder="+234 800 000 0000" />
+                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-300 mb-2">Phone Number</label>
+                    <input 
+                      type="tel" 
+                      id="phone"
+                      name="phone" 
+                      value={formData.phone} 
+                      onChange={handleChange} 
+                      disabled={isSubmitting} 
+                      className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                      placeholder="+234 800 000 0000" 
+                    />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-semibold text-gray-300 mb-2">Subject <span className="text-red-400">*</span></label>
-                    <select name="subject" value={formData.subject} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <label htmlFor="subject" className="block text-sm font-semibold text-gray-300 mb-2">Subject <span className="text-red-400">*</span></label>
+                    <select 
+                      id="subject"
+                      name="subject" 
+                      value={formData.subject} 
+                      onChange={handleChange} 
+                      disabled={isSubmitting}
+                      required
+                      aria-required="true"
+                      className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                       <option value="">Select a subject</option>
                       <option value="Enrollment Inquiry">Enrollment Inquiry</option>
                       <option value="Program Information">Program Information</option>
@@ -726,11 +936,26 @@ export default function HomePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">Message <span className="text-red-400">*</span></label>
-                  <textarea name="message" value={formData.message} onChange={handleChange} disabled={isSubmitting} rows={6} className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed" placeholder="Tell us more about your inquiry..." />
+                  <label htmlFor="message" className="block text-sm font-semibold text-gray-300 mb-2">Message <span className="text-red-400">*</span></label>
+                  <textarea 
+                    id="message"
+                    name="message" 
+                    value={formData.message} 
+                    onChange={handleChange} 
+                    disabled={isSubmitting}
+                    required
+                    aria-required="true"
+                    rows={6} 
+                    className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed" 
+                    placeholder="Tell us more about your inquiry..." 
+                  />
                 </div>
 
-                <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2">
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting} 
+                  className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2"
+                >
                   {isSubmitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />

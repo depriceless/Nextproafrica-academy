@@ -11,70 +11,70 @@ export default function CoachesPage() {
     
     
     {
-      id: 4,
-      name: "Chidi Nwankwo",
+      id: 1,
+      name: "IDOGBE TIMOTHY",
       role: "Elite Program Coach",
       category: "elite",
-      image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&q=80",
-      certifications: ["CAF License A", "Strength & Conditioning"],
-      experience: "12 years",
+      image: "./coachTimothy.jpg",
+      certifications: ["Strength & Conditioning"],
+      experience: "7 years",
       specialization: "Elite Performance",
-      bio: "Works with advanced players preparing for professional careers. Focus on high-level tactics, mental strength, and physical conditioning.",
+      bio: "Former player at crown Fc, Fc Ebede, FC osaka (Japan), Union Bank, First Bank, Shooting stars, and Bayelsc FC. Highest Goal Scorer at shooting. Bring 7+ years of top-level coaching experience ",
       achievements: [
         "Coached at professional academy level",
         "15+ players signed to professional clubs",
         "Elite coaching methodology expert"
       ],
       contact: {
-        email: "chidi@nextproafrica.com",
-        phone: "+234 807 345 6789"
+        email: "Idogbe@nextproafrica.com",
+        phone: "+2348039419590"
       }
     },
     {
       id: 5,
-      name: "Fatima Ibrahim",
+      name: "Adekola Opeyemi",
       role: "Technical Skills Coach",
       category: "technical",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80",
-      certifications: ["CAF License B", "Coerver Coaching Method"],
-      experience: "9 years",
+      image: "./coachcrespo.jpg",
+      certifications: ["Sports Science Degree", "Strength & Conditioning"],
+      experience: "7+ years",
       specialization: "Technical Skills",
-      bio: "Specialist in developing individual technical abilities. Expert in ball mastery, dribbling techniques, and one-on-one situations.",
+      bio: " Sport Science graduate (OAU) with a strong playing background across multiple clubs including Overcomer Fc , Knights FC, OAU Giants united. 7+ years of coaching experince",
       achievements: [
         "Technical skills program developer",
         "Coerver coaching certified",
         "Youth development award winner"
       ],
       contact: {
-        email: "fatima@nextproafrica.com",
-        phone: "+234 808 456 7890"
+        email: "Adekola@nextproafrica.com",
+        phone: "+2340762840245"
       }
     },
     {
       id: 6,
-      name: "David Thompson",
+      name: "Adejumo Amos",
       role: "Fitness & Conditioning Coach",
       category: "specialist",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&q=80",
-      certifications: ["Sports Science Degree", "Strength & Conditioning"],
+      image: "./coachamos.jpg",
+      certifications: [ "Coerver Coaching Method"],
       experience: "11 years",
       specialization: "Physical Conditioning",
-      bio: "Expert in sports science and athletic development. Designs age-appropriate conditioning programs to enhance performance and prevent injuries.",
+      bio: "A highly experienced coach with 8+ years in player development, Former coach at Polytechnic Ibadan (Saki Campus and Eruwa Cammpus). Woked with top academics across Ibadan",
       achievements: [
         "Reduced player injuries by 40%",
         "Developed youth fitness protocols",
         "Sports science researcher"
       ],
       contact: {
-        email: "david@nextproafrica.com",
-        phone: "+234 809 567 8901"
+        email: "Adejumonextproafrica.com",
+        phone: "+2348026689737"
       }
     }
   ]
 
   const stats = [
-    { icon: Award, label: "Combined Experience", value: "65+ Years" },
-    { icon: Trophy, label: "Championships Won", value: "25+" },
+    { icon: Award, label: "Combined Experience", value: "7+ Years" },
+    { icon: Trophy, label: "matches Won", value: "25+" },
     { icon: Users, label: "Players Developed", value: "500+" },
     { icon: Star, label: "Professional Placements", value: "40+" }
   ]
@@ -228,20 +228,19 @@ export default function CoachesPage() {
                 key={coach.id}
                 className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
               >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden bg-gradient-to-br from-yellow-500/20 to-blue-500/20">
-                  <img
-                    src={coach.image}
-                    alt={coach.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-2xl font-black text-white mb-1">{coach.name}</h3>
-                    <p className="text-yellow-400 font-semibold text-sm">{coach.role}</p>
-                  </div>
-                </div>
-
+{/* Image - Passport Style */}
+<div className="relative h-80 overflow-hidden bg-slate-100">
+<img
+  src={coach.image}
+  alt={coach.name}
+  className="w-full h-full object-cover object-top" // object-top prioritizes top of image
+/>
+  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+  <div className="absolute bottom-4 left-4 right-4">
+    <h3 className="text-2xl font-black text-white mb-1">{coach.name}</h3>
+    <p className="text-yellow-400 font-semibold text-sm">{coach.role}</p>
+  </div>
+</div>
                 {/* Content */}
                 <div className="p-6">
                   {/* Certifications */}

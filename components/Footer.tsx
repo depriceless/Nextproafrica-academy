@@ -98,19 +98,18 @@ export default function Footer() {
               <p className="text-gray-400 mb-6 leading-relaxed">
                 Nigeria's premier football academy dedicated to developing champions through world-class training and holistic development.
               </p>
-
-              {/* Social Media */}
+  {/* Social Media */}
               <div className="flex space-x-3 mb-6">
-                <a href="#" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
+                <a href="https://shrtlink.ai/NPA" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
                   <Facebook className="h-5 w-5 text-gray-400 group-hover:text-slate-900" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
+                <a href="https://clik.now/TVX2" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
                   <Twitter className="h-5 w-5 text-gray-400 group-hover:text-slate-900" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
+                <a href="https://clik.now/sHt6" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
                   <Instagram className="h-5 w-5 text-gray-400 group-hover:text-slate-900" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
+                <a href="https://clik.now/PSei" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 hover:bg-yellow-500 transition rounded-lg flex items-center justify-center group">
                   <Youtube className="h-5 w-5 text-gray-400 group-hover:text-slate-900" />
                 </a>
               </div>
@@ -119,15 +118,16 @@ export default function Footer() {
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-gray-400 hover:text-yellow-500 transition-colors">
                   <Phone className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm">+234 803 456 7890</span>
+                  <span className="text-sm">+2348101740717</span>
+                   <span className="text-sm">+2340789612151</span>
                 </div>
                 <div className="flex items-center space-x-2 text-gray-400 hover:text-yellow-500 transition-colors">
                   <Mail className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm">Nextproafrica2025@gmai.com</span>
+                  <span className="text-sm">Nextproafrica2025@gmail.com</span>
                 </div>
                 <div className="flex items-center space-x-2 text-gray-400">
                   <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm">123 Sports Avenue, Ibadan, Nigeria</span>
+                  <span className="text-sm"> c/o Edge hill low pratice,Alpe Building, Sw8/12114, liberty Road Ibadan,oyo state. </span>
                 </div>
               </div>
             </div>

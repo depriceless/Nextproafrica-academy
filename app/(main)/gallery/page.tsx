@@ -1,285 +1,74 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { ChevronRight, Play, X, ChevronLeft, Calendar, Tag, Image as ImageIcon, Video, Download, Share2, Heart } from 'lucide-react'
+import { ChevronRight, Play, X, ChevronLeft, Calendar, Tag, Image, Video, Download, Share2, Heart } from 'lucide-react'
 
 export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [selectedMedia, setSelectedMedia] = useState<number | null>(null)
   const [galleryVisible, setGalleryVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [viewMode, setViewMode] = useState<'grid' | 'masonry'>('grid')
   const [likedItems, setLikedItems] = useState<number[]>([])
 
   const categories = [
-    { id: 'all', label: 'All Media', count: 24 },
-    { id: 'training', label: 'Training Sessions', count: 8 },
-    { id: 'matches', label: 'Matches', count: 6 },
-    { id: 'events', label: 'Events', count: 5 },
-    { id: 'facilities', label: 'Facilities', count: 3 },
-    { id: 'celebrations', label: 'Celebrations', count: 2 }
+    { id: 'all', label: 'All Media', count: 5 },
+    { id: 'training', label: 'Training', count: 1 },
+    { id: 'matches', label: 'Matches', count: 2 },
+    { id: 'events', label: 'Events', count: 1 },
+    { id: 'facilities', label: 'Facilities', count: 1 }
   ]
 
   const galleryItems = [
-    {
-      id: 1,
+    { 
+      id: 1, 
       type: 'image',
-      url: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&q=80',
-      category: 'training',
-      title: 'Elite Skill Development',
-      description: 'Players mastering advanced ball control techniques during intensive training',
+      url: '/match.jpg', 
+      category: 'training', 
+      title: 'Training Session',
+      description: 'Professional training drills',
       date: 'October 8, 2025',
-      tags: ['Skills', 'Youth', 'Training']
+      tags: ['Skills', 'Training', 'Development']
     },
-    {
-      id: 2,
+    { 
+      id: 2, 
       type: 'image',
-      url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80',
-      category: 'matches',
-      title: 'Championship Glory',
-      description: 'U-17 team securing victory in the regional championship final',
+      url: '/matchii.jpg', 
+      category: 'matches', 
+      title: 'Match Day',
+      description: 'Team in action',
       date: 'October 5, 2025',
-      tags: ['Match', 'Championship', 'Victory']
+      tags: ['Match', 'Competition', 'Team']
     },
-    {
-      id: 3,
+    { 
+      id: 3, 
       type: 'image',
-      url: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600&q=80',
-      category: 'training',
-      title: 'Tactical Formation Training',
-      description: 'Team coordination and tactical awareness session with UEFA-certified coaches',
+      url: '/matchiii.jpg', 
+      category: 'events', 
+      title: 'Team Spirit',
+      description: 'Building champions together',
       date: 'October 3, 2025',
-      tags: ['Tactics', 'Team', 'Coaching']
+      tags: ['Team', 'Spirit', 'Unity']
     },
-    {
-      id: 4,
-      type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=600&q=80',
-      category: 'events',
-      title: 'Academy Graduation 2024',
-      description: 'Celebrating our graduates moving to professional clubs',
+    { 
+      id: 4, 
+      type: 'image', 
+      url: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800&q=80', 
+      category: 'facilities', 
+      title: 'Training Ground', 
+      description: 'State-of-the-art facilities',
       date: 'September 30, 2025',
-      tags: ['Event', 'Graduation', 'Celebration']
+      tags: ['Facilities', 'Infrastructure', 'Modern']
     },
-    {
-      id: 5,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=600&q=80',
-      category: 'facilities',
-      title: 'State-of-the-Art Training Ground',
-      description: 'Our FIFA-standard training facilities with professional equipment',
+    { 
+      id: 5, 
+      type: 'image', 
+      url: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80', 
+      category: 'matches', 
+      title: 'Victory Celebration', 
+      description: 'Team celebrating tournament win',
       date: 'September 25, 2025',
-      tags: ['Facilities', 'Infrastructure']
+      tags: ['Victory', 'Celebration', 'Trophy']
     },
-    {
-      id: 6,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&q=80',
-      category: 'celebrations',
-      title: 'Tournament Champions',
-      description: 'Victory celebration after winning the inter-state tournament',
-      date: 'September 20, 2025',
-      tags: ['Victory', 'Team', 'Trophy']
-    },
-    {
-      id: 7,
-      type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=600&q=80',
-      category: 'training',
-      title: 'Speed & Agility Training',
-      description: 'High-intensity speed and agility drills for player development',
-      date: 'September 15, 2025',
-      tags: ['Training', 'Fitness', 'Development']
-    },
-    {
-      id: 8,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&q=80',
-      category: 'matches',
-      title: 'Derby Day Victory',
-      description: 'Intense local derby match showcasing our tactical excellence',
-      date: 'September 12, 2025',
-      tags: ['Match', 'Derby', 'Competition']
-    },
-    {
-      id: 9,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80',
-      category: 'training',
-      title: 'Goalkeeper Specialized Training',
-      description: 'Dedicated goalkeeper training with professional coaching staff',
-      date: 'September 8, 2025',
-      tags: ['Goalkeeper', 'Training', 'Specialist']
-    },
-    {
-      id: 10,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=600&q=80',
-      category: 'events',
-      title: 'Open Day 2025',
-      description: 'Prospective players and families experiencing our academy firsthand',
-      date: 'September 5, 2025',
-      tags: ['Event', 'Open Day', 'Community']
-    },
-    {
-      id: 11,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=600&q=80',
-      category: 'facilities',
-      title: 'Indoor Training Complex',
-      description: 'All-weather indoor facilities for year-round training excellence',
-      date: 'September 1, 2025',
-      tags: ['Facilities', 'Indoor', 'Infrastructure']
-    },
-    {
-      id: 12,
-      type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1546608235-3310a2494cdf?w=600&q=80',
-      category: 'matches',
-      title: 'Season Highlights 2024/25',
-      description: 'Best moments from our incredible championship-winning season',
-      date: 'August 28, 2025',
-      tags: ['Highlights', 'Season', 'Goals']
-    },
-    {
-      id: 13,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80',
-      category: 'training',
-      title: 'Youth Academy Development',
-      description: 'Young players building foundational skills in age-appropriate sessions',
-      date: 'August 25, 2025',
-      tags: ['Youth', 'Development', 'Basics']
-    },
-    {
-      id: 14,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=600&q=80',
-      category: 'matches',
-      title: 'Cup Final Triumph',
-      description: 'Historic cup final victory securing our first major trophy',
-      date: 'August 20, 2025',
-      tags: ['Cup', 'Final', 'Trophy']
-    },
-    {
-      id: 15,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1459865264687-595d652de67e?w=600&q=80',
-      category: 'events',
-      title: 'Community Outreach Program',
-      description: 'Engaging with local communities through football development initiatives',
-      date: 'August 15, 2025',
-      tags: ['Community', 'Outreach', 'Social']
-    },
-    {
-      id: 16,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=600&q=80',
-      category: 'training',
-      title: 'Strength & Conditioning',
-      description: 'Physical development program with professional fitness coaches',
-      date: 'August 10, 2025',
-      tags: ['Fitness', 'Strength', 'Conditioning']
-    },
-    {
-      id: 17,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=600&q=80',
-      category: 'facilities',
-      title: 'Modern Gym Facilities',
-      description: 'Fully-equipped gymnasium for player fitness and recovery',
-      date: 'August 5, 2025',
-      tags: ['Gym', 'Facilities', 'Equipment']
-    },
-    {
-      id: 18,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=600&q=80',
-      category: 'celebrations',
-      title: 'End of Season Awards',
-      description: 'Celebrating player achievements and outstanding performances',
-      date: 'July 30, 2025',
-      tags: ['Awards', 'Celebration', 'Achievement']
-    },
-    {
-      id: 19,
-      type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?w=600&q=80',
-      category: 'training',
-      title: 'Shooting Technique Masterclass',
-      description: 'Advanced shooting drills and finishing techniques with expert coaches',
-      date: 'July 25, 2025',
-      tags: ['Shooting', 'Technique', 'Masterclass']
-    },
-    {
-      id: 20,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1528543606781-2f6e6857f318?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1528543606781-2f6e6857f318?w=600&q=80',
-      category: 'matches',
-      title: 'Youth League Champions',
-      description: 'Our U-15 team celebrating their league championship victory',
-      date: 'July 20, 2025',
-      tags: ['Youth', 'League', 'Champions']
-    },
-    {
-      id: 21,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=600&q=80',
-      category: 'training',
-      title: 'Pre-Season Preparation',
-      description: 'Intensive pre-season training camp preparing for new challenges',
-      date: 'July 15, 2025',
-      tags: ['Pre-Season', 'Camp', 'Preparation']
-    },
-    {
-      id: 22,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?w=600&q=80',
-      category: 'events',
-      title: 'International Friendly Tournament',
-      description: 'Hosting teams from across Africa for friendly competition',
-      date: 'July 10, 2025',
-      tags: ['International', 'Tournament', 'Friendly']
-    },
-    {
-      id: 23,
-      type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&q=80',
-      category: 'matches',
-      title: 'Best Goals of the Season',
-      description: 'Compilation of the most spectacular goals from our players',
-      date: 'July 5, 2025',
-      tags: ['Goals', 'Highlights', 'Best']
-    },
-    {
-      id: 24,
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=1200&q=80',
-      thumbnail: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=600&q=80',
-      category: 'training',
-      title: 'Evening Training Session',
-      description: 'Sunset training session capturing the dedication of our players',
-      date: 'July 1, 2025',
-      tags: ['Training', 'Evening', 'Dedication']
-    }
   ]
 
   useEffect(() => {
@@ -338,7 +127,7 @@ export default function GalleryPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center space-x-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-2 mb-6">
-              <ImageIcon className="h-5 w-5 text-yellow-500" />
+              <Image className="h-5 w-5 text-yellow-500" />
               <span className="text-sm font-semibold text-yellow-500 tracking-wide">Media Gallery</span>
             </div>
             
@@ -394,29 +183,6 @@ export default function GalleryPage() {
                 </button>
               ))}
             </div>
-
-            {/* View Mode Toggle */}
-            <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-400">View:</span>
-              <div className="flex bg-slate-700 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`px-4 py-2 rounded-md text-sm font-semibold transition-all ${
-                    viewMode === 'grid' ? 'bg-yellow-500 text-slate-900' : 'text-gray-400 hover:text-white'
-                  }`}
-                >
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('masonry')}
-                  className={`px-4 py-2 rounded-md text-sm font-semibold transition-all ${
-                    viewMode === 'masonry' ? 'bg-yellow-500 text-slate-900' : 'text-gray-400 hover:text-white'
-                  }`}
-                >
-                  Masonry
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Results Count */}
@@ -432,40 +198,43 @@ export default function GalleryPage() {
           {filteredItems.length === 0 ? (
             <div className="text-center py-20">
               <div className="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                <ImageIcon className="h-12 w-12 text-gray-600" />
+                <Image className="h-12 w-12 text-gray-600" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">No media found</h3>
               <p className="text-gray-400">Try adjusting your filters or search terms</p>
             </div>
           ) : (
-            <div 
-              id="gallery-grid"
-              className={viewMode === 'grid' 
-                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-                : 'columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6'
-              }
-            >
+           <div 
+  id="gallery-grid"
+  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
+>
               {filteredItems.map((item, index) => {
-                const delay = index * 50
+                const delay = index * 100
                 const isLiked = likedItems.includes(item.id)
                 
                 return (
                   <div
                     key={item.id}
-                    className={`group relative bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 cursor-pointer ${
+                    className={`group relative bg-slate-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer ${
                       galleryVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                    } ${viewMode === 'masonry' ? 'break-inside-avoid' : ''}`}
-                    style={{ transitionDelay: `${delay}ms` }}
+                    }`}
+                    style={{ 
+                      transitionDelay: `${delay}ms`,
+                      animation: 'fadeInUp 0.6s ease-out forwards',
+                      opacity: 0
+                    }}
                     onClick={() => setSelectedMedia(item.id)}
                   >
-                    {/* Image/Video */}
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                   {/* Image/Video */}
+                    <div className="relative aspect-[5/6] overflow-hidden">
                       <img
-                        src={item.thumbnail}
+                        src={item.url}
                         alt={item.title}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out bg-slate-900"
+                        loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                      {/* Professional gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                       
                       {/* Video Play Button */}
                       {item.type === 'video' && (
@@ -476,21 +245,18 @@ export default function GalleryPage() {
                         </div>
                       )}
 
-                      {/* Type Badge */}
-                      <div className="absolute top-4 left-4 flex items-center space-x-2 bg-slate-900/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-bold">
-                        {item.type === 'video' ? <Video className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
-                        <span>{item.type.toUpperCase()}</span>
+                      {/* Hover content overlay */}
+                      <div className="absolute inset-0 flex items-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                          <h3 className="text-xl font-bold text-white mb-1">{item.title}</h3>
+                          <p className="text-gray-300 text-sm">{item.description}</p>
+                        </div>
                       </div>
-
-                      {/* Like Button */}
-                      <button
-                        onClick={(e) => toggleLike(item.id, e)}
-                        className="absolute top-4 right-4 w-10 h-10 bg-slate-900/80 backdrop-blur-sm hover:bg-slate-900 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
-                      >
-                        <Heart 
-                          className={`h-5 w-5 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`}
-                        />
-                      </button>
+                      
+                      {/* Shine effect on hover */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000" />
+                      </div>
 
                       {/* Date Badge */}
                       <div className="absolute bottom-4 right-4 flex items-center space-x-1 bg-slate-900/80 backdrop-blur-sm text-gray-300 px-3 py-1.5 rounded-full text-xs">
@@ -499,45 +265,14 @@ export default function GalleryPage() {
                       </div>
                     </div>
 
-                    {/* Content */}
-                    <div className="p-5">
-                      <h3 className="text-lg font-bold text-white mb-2 group-hover:text-yellow-500 transition-colors line-clamp-1">
-                        {item.title}
-                      </h3>
-                      
-                      <p className="text-gray-400 text-sm mb-3 line-clamp-2">
-                        {item.description}
-                      </p>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {item.tags.map((tag, idx) => (
-                          <span 
-                            key={idx}
-                            className="flex items-center space-x-1 bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-xs font-semibold"
-                          >
-                            <Tag className="h-3 w-3" />
-                            <span>{tag}</span>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Hover Border Effect */}
-                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/50 rounded-2xl transition-all duration-300 pointer-events-none" />
+                    {/* Professional border glow effect */}
+                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/60 rounded-2xl transition-all duration-500 pointer-events-none" />
+                    
+                    {/* Corner accent */}
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                   </div>
                 )
               })}
-            </div>
-          )}
-
-          {/* Load More Button */}
-          {filteredItems.length > 0 && (
-            <div className="mt-12 text-center">
-              <button className="group bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2 mx-auto">
-                <span>Load More Media</span>
-                <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </button>
             </div>
           )}
         </div>
@@ -546,7 +281,7 @@ export default function GalleryPage() {
       {/* Lightbox Modal */}
       {selectedMedia && currentItem && (
         <div 
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300"
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedMedia(null)}
         >
           {/* Close Button */}
@@ -575,30 +310,6 @@ export default function GalleryPage() {
               <ChevronRight className="h-6 w-6" />
             </button>
           )}
-
-          {/* Action Buttons */}
-          <div className="absolute top-4 left-4 z-10 flex items-center space-x-2">
-            <button 
-              onClick={(e) => { e.stopPropagation(); toggleLike(currentItem.id, e); }}
-              className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
-            >
-              <Heart 
-                className={`h-5 w-5 transition-colors ${likedItems.includes(currentItem.id) ? 'fill-red-500 text-red-500' : ''}`}
-              />
-            </button>
-            <button 
-              onClick={(e) => e.stopPropagation()}
-              className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
-            >
-              <Share2 className="h-5 w-5" />
-            </button>
-            <button 
-              onClick={(e) => e.stopPropagation()}
-              className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
-            >
-              <Download className="h-5 w-5" />
-            </button>
-          </div>
 
           {/* Content */}
           <div className="relative max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
@@ -685,6 +396,19 @@ export default function GalleryPage() {
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   )
 }
