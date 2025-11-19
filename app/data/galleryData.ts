@@ -52,7 +52,7 @@ export const galleryItems: GalleryItem[] = [
   { 
     id: 4, 
     type: 'image', 
-    url: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800&q=80', 
+    url: './pic.jpg', 
     category: 'facilities', 
     title: 'Training Ground', 
     description: 'State-of-the-art facilities',
@@ -62,19 +62,29 @@ export const galleryItems: GalleryItem[] = [
   { 
     id: 5, 
     type: 'image', 
-    url: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80', 
+    url: './jerrad.jpg', 
     category: 'matches', 
     title: 'Victory Celebration', 
     description: 'Team celebrating tournament win',
     date: 'September 25, 2025',
     tags: ['Victory', 'Celebration', 'Trophy']
   },
+  { 
+    id: 6, // ✅ Changed from 5 to 6
+    type: 'image', 
+    url: './collect.jpg', 
+    category: 'matches', 
+    title: 'Trophy Collection', 
+    description: 'Collecting championship trophies',
+    date: 'September 25, 2025',
+    tags: ['Victory', 'Celebration', 'Trophy']
+  },
 ]
 
 export const categories: Category[] = [
-  { id: 'all', label: 'All Media', count: 5 },
+  { id: 'all', label: 'All Media', count: 6 }, // Updated count
   { id: 'training', label: 'Training', count: 1 },
-  { id: 'matches', label: 'Matches', count: 2 },
+  { id: 'matches', label: 'Matches', count: 3 }, // Updated count
   { id: 'events', label: 'Events', count: 1 },
   { id: 'facilities', label: 'Facilities', count: 1 }
 ]

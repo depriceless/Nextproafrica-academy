@@ -649,7 +649,7 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* News Section */}
+      {/* News Section }
       <section id="news" className="relative bg-slate-50 py-16 lg:py-20 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-0 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl" />

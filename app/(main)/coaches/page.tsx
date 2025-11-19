@@ -109,7 +109,7 @@ export default function CoachesPage() {
   return (
     <div className="min-h-screen bg-slate-50 pb-16">
       {/* Hero Section */}
-      <section className="relative bg-slate-900 py-16 lg:py-20 overflow-hidden mb-16">
+      <section className="relative bg-slate-900 py-16 lg:py-20 overflow-hidden mb-19">
         <div className="absolute inset-0">
           <Image 
             src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1920&q=80" 
@@ -126,7 +126,7 @@ export default function CoachesPage() {
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
           <div className="inline-flex items-center space-x-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-2 mb-6">
             <Users className="h-5 w-5 text-yellow-500" />
             <span className="text-sm font-semibold text-yellow-500 tracking-wide">Our Team</span>
@@ -229,11 +229,11 @@ export default function CoachesPage() {
                 className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
               >
 {/* Image - Passport Style */}
-<div className="relative h-80 overflow-hidden bg-slate-100">
+<div className="relative h-64 overflow-hidden bg-slate-100">
 <img
   src={coach.image}
   alt={coach.name}
-  className="w-full h-full object-cover object-top" // object-top prioritizes top of image
+  className="w-full h-full object-cover object-top"
 />
   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
   <div className="absolute bottom-4 left-4 right-4">
@@ -242,7 +242,7 @@ export default function CoachesPage() {
   </div>
 </div>
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-3">
                   {/* Certifications */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {coach.certifications.map((cert, idx) => (
@@ -326,54 +326,7 @@ export default function CoachesPage() {
           </div>
         </section>
 
-        {/* Qualifications Section */}
-        <section className="bg-slate-900 rounded-2xl p-8 lg:p-12 shadow-xl relative overflow-hidden mb-16">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-          </div>
 
-          <div className="relative">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
-                World-Class Certifications
-              </h2>
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                Our coaches hold prestigious qualifications from leading football organizations
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-                <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4">
-                  <Award className="h-6 w-6 text-yellow-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">UEFA Licenses</h3>
-                <p className="text-gray-400 text-sm">
-                  European coaching certifications from UEFA&apos;s comprehensive coaching pathway
-                </p>
-              </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-                <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4">
-                  <Trophy className="h-6 w-6 text-yellow-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">CAF Certifications</h3>
-                <p className="text-gray-400 text-sm">
-                  African football confederation coaching qualifications and licenses
-                </p>
-              </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-                <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4">
-                  <Star className="h-6 w-6 text-yellow-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Specialized Training</h3>
-                <p className="text-gray-400 text-sm">
-                  Additional certifications in sports science, psychology, and specialized coaching
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* CTA Section */}
         <section className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl p-8 lg:p-12 shadow-xl text-center">
