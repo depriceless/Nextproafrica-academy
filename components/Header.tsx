@@ -12,7 +12,7 @@ export default function Header() {
       <div className="bg-slate-800 border-b border-yellow-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-row justify-between items-center py-2 gap-2">
-            <p className="text-sm text-gray-400 font-medium hidden lg:block">Official Site Nextpro Africa FA</p>
+            <p className="text-sm text-gray-400 font-medium hidden lg:block">Official Site Nextpro Africa Foootball Academy</p>
             
             <div className="flex flex-row items-center justify-start lg:justify-start gap-2 sm:gap-3 text-sm flex-1 lg:flex-initial">
               <a 

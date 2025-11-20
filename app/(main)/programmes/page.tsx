@@ -97,7 +97,7 @@ export default function ProgramsPage() {
     {
       icon: Users,
       title: "Expert Coaches",
-      description: "UEFA and CAF certified coaches with professional playing experience"
+      description: "certified coaches with professional playing experience"
     },
     {
       icon: Target,

@@ -23,7 +23,7 @@ export default function NewsEventsPage() {
     {
       id: 2,
       title: "New Certified Coaches Join Our Team",
-      excerpt: "We're excited to announce the addition of three new CAF-certified coaches who bring extensive experience to our academy.",
+      excerpt: "We're excited to announce the addition of three new certified coaches who bring extensive experience to our academy.",
       content: "Nextpro Africa FA continues to strengthen its coaching staff with the addition of three highly qualified professionals...",
       image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80",
       category: "Announcement",

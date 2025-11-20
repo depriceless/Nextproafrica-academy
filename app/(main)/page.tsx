@@ -67,7 +67,7 @@ export default function HomePage() {
     {
       title: "Your Journey Starts Now",
       subtitle: "Excellence in Every Touch",
-      description: "State-of-the-art facilities and UEFA-certified coaches ready to elevate your game",
+      description: "State-of-the-art facilities and certified coaches ready to elevate your game",
       image: "/nextproi.jpg"
     }
   ]
@@ -109,13 +109,14 @@ export default function HomePage() {
 
   const newsArticles = [
     { id: 1, title: "U-17 Team Wins Regional Championship", excerpt: "Our Under-17 squad dominated the regional championship, securing first place with an impressive 5-0 victory in the final match.", image: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80", category: "Achievement", date: "October 5, 2025", author: "Coach Michael", readTime: "3 min read" },
-    { id: 2, title: "New UEFA-Certified Coaches Join Our Team", excerpt: "We're excited to announce the addition of three new UEFA-certified coaches who bring international experience to our academy.", image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80", category: "Announcement", date: "October 1, 2025", author: "Admin", readTime: "2 min read" },
+    { id: 2, title: "Certified Coaches Join Our Team", excerpt: "We're excited to announce the addition of three new certified coaches who bring international experience to our academy.", image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80", category: "Announcement", date: "October 1, 2025", author: "Admin", readTime: "2 min read" },
     { id: 3, title: "Summer Training Camp Registration Open", excerpt: "Join our intensive summer training camp featuring advanced drills, match simulations, and guest appearances from professional players.", image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80", category: "Event", date: "September 28, 2025", author: "Academy Director", readTime: "4 min read" }
   ]
 
   const contactInfo = [
-    { icon: MapPin, title: "Visit Us", details: ["123 Sports Avenue, Ring Road", "Ibadan, Oyo State, Nigeria"], color: "yellow" },
-    { icon: Phone, title: "Call Us", details: ["+2348101740717"], color: "blue" },
+    { icon: MapPin, title: "Visit Us", details: ["c/o Edge hill law pratice,Alpe Building, Sw8/12114, liberty Road Ibadan,oyo state. "], color: "yellow" },
+    { icon: Phone, title: "Call Us", details: ["+2348101740717",  
+"+2347089612151"], color: "blue" },
     { icon: Mail, title: "Email Us", details: ["Nextproafrica2025@gmail.com"], color: "green" },
     { icon: Clock, title: "Training Schedule", details: ["Mon, Wed, Fri: 10:00 AM - 12:00 PM", "Saturday: 10:00 AM - 11:00 AM (Gym)"], color: "red" }
   ]
@@ -286,7 +287,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-white">
-      {/* Hero Section */}
+{/* Hero Section */}
       <section id="home" className="relative h-[85vh] bg-slate-900 overflow-hidden pt-20">
         <div className="absolute inset-0">
           {slides.map((slide, index) => (
@@ -321,10 +322,6 @@ export default function HomePage() {
                   <span>Get started</span>
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </a>
-                <button onClick={() => setIsVideoPlaying(true)} className="group relative bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 border border-white/20 hover:border-white/40 flex items-center space-x-2">
-                  <Play className="h-5 w-5" />
-                  <span>Watch Video</span>
-                </button>
               </div>
             </div>
           </div>
@@ -419,7 +416,7 @@ export default function HomePage() {
                   <div className="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center mb-4">
                     <Trophy className="h-6 w-6 text-yellow-600" />
                   </div>
-                  <h4 className="text-xl font-bold text-slate-900 mb-2">NPA Certified</h4>
+                  <h4 className="text-xl font-bold text-slate-900 mb-2"> Certified Coaches </h4>
                   <p className="text-gray-600 text-sm">International standard coaching qualifications</p>
                 </div>
 
@@ -736,8 +733,8 @@ export default function HomePage() {
                     <Shield className="h-6 w-6 text-white group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors duration-300">OYO State FA Registered</h3>
-                    <p className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">Official member of the state football association with full accreditation for youth development programs.</p>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors duration-300">Affliated with Oyo state FA</h3>
+                    <p className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">Official member of the Oyo state football association with full accreditation for youth development programs.</p>
                   </div>
                 </div>
                 

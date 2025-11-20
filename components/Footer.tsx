@@ -119,7 +119,7 @@ export default function Footer() {
                 <div className="flex items-center space-x-2 text-gray-400 hover:text-yellow-500 transition-colors">
                   <Phone className="h-4 w-4 flex-shrink-0" />
                   <span className="text-sm">+2348101740717</span>
-                   <span className="text-sm">+2340789612151</span>
+                   <span className="text-sm">+2347089612151</span>
                 </div>
                 <div className="flex items-center space-x-2 text-gray-400 hover:text-yellow-500 transition-colors">
                   <Mail className="h-4 w-4 flex-shrink-0" />
@@ -127,7 +127,7 @@ export default function Footer() {
                 </div>
                 <div className="flex items-center space-x-2 text-gray-400">
                   <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm"> c/o Edge hill low pratice,Alpe Building, Sw8/12114, liberty Road Ibadan,oyo state. </span>
+                  <span className="text-sm"> c/o Edge hill law pratice,Alpe Building, Sw8/12114, liberty Road Ibadan,oyo state. </span>
                 </div>
               </div>
             </div>

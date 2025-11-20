@@ -42,7 +42,6 @@ export default function CoachesPage() {
       bio: " Sport Science graduate (OAU) with a strong playing background across multiple clubs including Overcomer Fc , Knights FC, OAU Giants united. 7+ years of coaching experince",
       achievements: [
         "Technical skills program developer",
-        "Coerver coaching certified",
         "Youth development award winner"
       ],
       contact: {
